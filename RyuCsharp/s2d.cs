@@ -177,7 +177,7 @@ namespace RyuCsharp
                 // This can only be the case if 2^e2 divides m10 * 10^e10, which in turn requires that the
                 // largest power of 2 that divides m10 + e10 is greater than e2. If e2 is less than e10, then
                 // the result must be exact. Otherwise we use the existing multipleOfPowerOf2 function.
-                trailingZeros = e2 < e10 || multipleOfPowerOf2(m10, (uint32_t)(e2 - e10));
+                trailingZeros = e2 < e10 || (e2 - e10 < 64 && multipleOfPowerOf2(m10, (uint32_t)(e2 - e10)));
             }
             else
             {

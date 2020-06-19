@@ -103,7 +103,7 @@ namespace RyuCsharp
         // Returns true if value is divisible by 2^p.
         static bool multipleOfPowerOf2(uint64_t value, uint32_t p)
         {
-            assert(value != 0);
+            assert(p < 64);
             // __builtin_ctzll doesn't appear to be faster here.
             return (value & ((1ul << (int)p) - 1)) == 0;
         }
