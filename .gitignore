@@ -1,0 +1,13 @@
+/RyuCsharp/obj
+/RyuCsharp/bin
+/RyuCsharp.s2d_data/bin
+/RyuCsharp.s2d_data/obj
+/RyuCsharp.UnitTests/bin
+/RyuCsharp.UnitTests/obj
+/utils/GenerateTestData/bin
+/utils/GenerateTestData/obj
+/.vs/RyuCsharp/DesignTimeBuild/.dtbcache.v2
+/.vs/RyuCsharp/v16/.suo
+/.vs/RyuCsharp/v16/TestStore/0/022.testlog
+/.vs/RyuCsharp/v16/TestStore/0/testlog.manifest
+/.vs/RyuCsharp/v16/TestStore/0/*.testlog
