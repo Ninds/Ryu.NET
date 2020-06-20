@@ -3,6 +3,7 @@ using Ryu.Net.UnitTests.s2d_data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Xunit;
 
 namespace Ryu.Net.UnitTests
@@ -16,13 +17,23 @@ namespace Ryu.Net.UnitTests
         public void TestWithSmall(string str)
         {
 
-            var buffer = new char[str.Length];
-            str.CopyTo(0, buffer, 0, str.Length);
-
             double ryuVale;
             var eq1 = Ryu.Net.Internal.Ryu.s2d_n(str.AsSpan(), out ryuVale);
             Assert.Equal(Status.SUCCESS, eq1);
             Assert.Equal(ryuVale.ToString("G18"), double.Parse(str).ToString("G18"));
+
+        }
+
+        [Theory]
+        
+        [ClassData(typeof(SmallAsciiDataGenerator))]
+        public void TestWithSmall_Ascii(byte[] ascii)
+        {
+
+            double ryuVale;
+            var eq1 = Ryu.Net.Internal.Ryu.s2d_n(ascii, out ryuVale);
+            Assert.Equal(Status.SUCCESS, eq1);
+            Assert.Equal(ryuVale.ToString("G18"), double.Parse(Encoding.ASCII.GetString(ascii)).ToString("G18"));
 
         }
 
@@ -45,5 +56,23 @@ namespace Ryu.Net.UnitTests
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     }
+
+    public class SmallAsciiDataGenerator : IEnumerable<object[]>
+    {
+        IEnumerable<IFPTestData> _allFPTestDatas;
+
+        public IEnumerator<object[]> GetEnumerator()
+        {
+            foreach (var str in SmallTestSet.TestAsciiArray)
+            {
+
+                yield return new object[] { str };
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    }
+
 
 }

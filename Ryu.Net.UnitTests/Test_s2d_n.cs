@@ -26,8 +26,7 @@ namespace Ryu.Net.UnitTests
         public void TestWithRemysIteratoutput(string str, double val)
         {
 
-            var buffer = new char[str.Length];
-            str.CopyTo(0, buffer, 0, str.Length);
+        
 
             double ryuVale;
             var eq1 = Ryu.Net.Internal.Ryu.s2d_n(str.AsSpan(), out ryuVale);

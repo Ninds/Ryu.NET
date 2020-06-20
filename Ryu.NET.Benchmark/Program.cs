@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
 using System;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Ryu.NET.Benchmark
@@ -10,7 +11,11 @@ namespace Ryu.NET.Benchmark
         {
             try
             {
-                BenchmarkSwitcher.FromAssembly(Assembly.GetExecutingAssembly()).Run(args);
+                  BenchmarkSwitcher.FromAssembly(Assembly.GetExecutingAssembly()).Run(args);
+                //var debugInstance = new ParseAsciiString();
+                //debugInstance.GlobalSetup();
+                //debugInstance.CSDoubleParse();
+                //debugInstance.RyuDoubleParse();
             }
             catch(Exception e)
             {
