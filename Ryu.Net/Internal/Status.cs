@@ -1,4 +1,4 @@
-﻿namespace Ryu.Net
+﻿namespace Ryu.Net.Internal
 {
     public enum Status
     {

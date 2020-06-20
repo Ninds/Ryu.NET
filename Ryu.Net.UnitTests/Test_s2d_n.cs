@@ -1,4 +1,5 @@
-﻿using Ryu.Net.UnitTests.s2d_data;
+﻿using Ryu.Net.Internal;
+using Ryu.Net.UnitTests.s2d_data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Ryu.Net.UnitTests
 
         // Probably not best to run these tests through VS's test runner
         // Run them ftom the command line  'dotnet test RyuCsharp.UnitTests.dll'
-        [Theory]
+        //[Theory]
         [InlineData("1.2999999999999999E+154", 1.2999999999999999E+154)]
         [ClassData(typeof(DataGenerator))]
         public void TestWithRemysIteratoutput(string str, double val)
@@ -31,7 +32,7 @@ namespace Ryu.Net.UnitTests
             double ryuVale;
             fixed (char* buffStart = &buffer[0])
             {
-                var eq1 = Ryu.s2d_n(buffStart, str.Length, &ryuVale);
+                var eq1 = Ryu.Net.Internal.Ryu.s2d_n(buffStart, str.Length, &ryuVale);
                 Assert.Equal(Status.SUCCESS, eq1);
             }
            

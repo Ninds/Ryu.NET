@@ -1,10 +1,8 @@
-﻿using uint8_t = System.Byte;
-using int32_t = System.Int32;
+﻿using int32_t = System.Int32;
 using uint32_t = System.UInt32;
-using int64_t = System.Int64;
 using uint64_t = System.UInt64;
 
-namespace Ryu.Net
+namespace Ryu.Net.Internal
 {
     unsafe partial class Ryu
     {

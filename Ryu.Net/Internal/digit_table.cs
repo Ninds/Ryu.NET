@@ -1,4 +1,4 @@
-﻿namespace Ryu.Net
+﻿namespace Ryu.Net.Internal
 {
     unsafe partial class Ryu
     {

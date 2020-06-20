@@ -11,3 +11,13 @@
 /.vs/Ryu.Net/v16/TestStore/0/022.testlog
 /.vs/Ryu.Net/v16/TestStore/0/testlog.manifest
 /.vs/Ryu.Net/v16/TestStore/0/*.testlog
+/.vs/RyuCsharp/DesignTimeBuild/.dtbcache.v2
+/.vs/RyuCsharp/v16/.suo
+/.vs/RyuCsharp/v16/TestStore/0/023.testlog
+/.vs/RyuCsharp/v16/TestStore/0/testlog.manifest
+/utils/GenerateTestData/Properties/launchSettings.json
+/utils/GenerateSmallerTestData/bin
+/utils/GenerateSmallerTestData/obj
+/utils/GenerateSmallerTestData/Properties
+/Ryu.NET.Benchmark/bin
+/Ryu.NET.Benchmark/obj

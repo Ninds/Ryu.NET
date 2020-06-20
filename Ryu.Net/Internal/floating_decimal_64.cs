@@ -1,7 +1,7 @@
 ﻿using int32_t = System.Int32;
 using uint64_t = System.UInt64;
 
-namespace Ryu.Net
+namespace Ryu.Net.Internal
 {
     // A floating decimal representing m * 10^e.
     struct floating_decimal_64

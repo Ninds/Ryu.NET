@@ -1,6 +1,6 @@
 ﻿using uint64_t = System.UInt64;
 
-namespace Ryu.Net
+namespace Ryu.Net.Internal
 {
     unsafe partial class Ryu
     {
