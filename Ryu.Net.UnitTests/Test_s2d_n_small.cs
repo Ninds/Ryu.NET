@@ -3,8 +3,6 @@ using Ryu.Net.UnitTests.s2d_data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Xunit;
 
 namespace Ryu.Net.UnitTests
@@ -22,12 +20,8 @@ namespace Ryu.Net.UnitTests
             str.CopyTo(0, buffer, 0, str.Length);
 
             double ryuVale;
-            fixed (char* buffStart = &buffer[0])
-            {
-                var eq1 = Ryu.Net.Internal.Ryu.s2d_n(buffStart, str.Length, &ryuVale);
-                Assert.Equal(Status.SUCCESS, eq1);
-            }
-           
+            var eq1 = Ryu.Net.Internal.Ryu.s2d_n(str.AsSpan(), out ryuVale);
+            Assert.Equal(Status.SUCCESS, eq1);
             Assert.Equal(ryuVale.ToString("G18"), double.Parse(str).ToString("G18"));
 
         }

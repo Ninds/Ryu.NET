@@ -1,4 +1,5 @@
-﻿using static Ryu.Net.Internal.Status;
+﻿using System;
+using static Ryu.Net.Internal.Status;
 using int32_t = System.Int32;
 using uint32_t = System.UInt32;
 using uint64_t = System.UInt64;
@@ -29,8 +30,10 @@ namespace Ryu.Net.Internal
             return *(double*)&bits;
         }
 
-        public static Status s2d_n(char* buffer, int len, double* result)
+        public static Status s2d_n(ReadOnlySpan<char> buffer, out double result)
         {
+            result = 0;
+            var len = buffer.Length;
             if (len == 0)
             {
                 return INPUT_TOO_SHORT;
@@ -114,7 +117,7 @@ namespace Ryu.Net.Internal
             e10 -= dotIndex < eIndex ? eIndex - dotIndex - 1 : 0;
             if (m10 == 0)
             {
-                *result = signedM ? -0.0 : 0.0;
+                result = signedM ? -0.0 : 0.0;
                 return SUCCESS;
             }
 
@@ -123,14 +126,14 @@ namespace Ryu.Net.Internal
             {
                 // Number is less than 1e-324, which should be rounded down to 0; return +/-0.0.
                 uint64_t ieee = ((uint64_t)(signedM ? 1 : 0)) << (DOUBLE_EXPONENT_BITS + DOUBLE_MANTISSA_BITS);
-                *result = int64Bits2Double(ieee);
+                result = int64Bits2Double(ieee);
                 return SUCCESS;
             }
             if (m10digits + e10 >= 310)
             {
                 // Number is larger than 1e+309, which should be rounded down to 0; return +/-Infinity.
                 uint64_t ieee = (((uint64_t)(signedM ? 1 : 0)) << (DOUBLE_EXPONENT_BITS + DOUBLE_MANTISSA_BITS)) | (0x7fful << DOUBLE_MANTISSA_BITS);
-                *result = int64Bits2Double(ieee);
+                result = int64Bits2Double(ieee);
                 return SUCCESS;
             }
 
@@ -183,7 +186,7 @@ namespace Ryu.Net.Internal
             {
                 // Final IEEE exponent is larger than the maximum representable; return +/-Infinity.
                 uint64_t ieee = (((uint64_t)(signedM ? 1 : 0)) << (DOUBLE_EXPONENT_BITS + DOUBLE_MANTISSA_BITS)) | (0x7fful << DOUBLE_MANTISSA_BITS);
-                *result = int64Bits2Double(ieee);
+                result = int64Bits2Double(ieee);
                 return SUCCESS;
             }
 
@@ -212,13 +215,9 @@ namespace Ryu.Net.Internal
             }
             ieee_m2 &= (1ul << DOUBLE_MANTISSA_BITS) - 1;
             uint64_t ieee2 = (((((uint64_t)(signedM ? 1 : 0)) << DOUBLE_EXPONENT_BITS) | (uint64_t)ieee_e2) << DOUBLE_MANTISSA_BITS) | ieee_m2;
-            *result = int64Bits2Double(ieee2);
+            result = int64Bits2Double(ieee2);
             return SUCCESS;
         }
 
-        static Status s2d(char* buffer, double* result)
-        {
-            return s2d_n(buffer, strlen(buffer), result);
-        }
     }
 }

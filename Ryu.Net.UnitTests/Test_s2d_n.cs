@@ -30,11 +30,9 @@ namespace Ryu.Net.UnitTests
             str.CopyTo(0, buffer, 0, str.Length);
 
             double ryuVale;
-            fixed (char* buffStart = &buffer[0])
-            {
-                var eq1 = Ryu.Net.Internal.Ryu.s2d_n(buffStart, str.Length, &ryuVale);
-                Assert.Equal(Status.SUCCESS, eq1);
-            }
+            var eq1 = Ryu.Net.Internal.Ryu.s2d_n(str.AsSpan(), out ryuVale);
+            Assert.Equal(Status.SUCCESS, eq1);
+            
            
             //Uncomment the following code to produce a text file
             //summarising the Failed tests. 
