@@ -9,6 +9,6 @@ The input for this program can be generated from [fptest.py](https://github.com/
 
 The output file is then the input for GenerateTestData
 
-`dotnet GenerateTestData.dll parse64plus.txt  <RyuCsharp.s2d_data path>`
+`dotnet GenerateTestData.dll parse64plus.txt  <Ryu.Net.s2d_data path>`
 
 

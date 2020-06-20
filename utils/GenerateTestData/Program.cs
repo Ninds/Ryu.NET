@@ -37,7 +37,7 @@ namespace GenerateTestData
                             outputFile.WriteLine(
         @$"using System.Collections.Generic;
 
-namespace RyuCsharp.s2d_data
+namespace Ryu.Net.UnitTests.s2d_data
 {{
      class {dictName}_{count} : IFPTestData
      {{   
