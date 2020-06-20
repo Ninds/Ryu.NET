@@ -42,7 +42,8 @@ namespace Ryu.Net.UnitTests.s2d_data
      class {dictName}_{count} : IFPTestData
      {{   
             public string TextFileName => ""{dictName}/{dictName}_{count}.txt"";
-            public  double[] TestArray =>  new double[]
+            public  double[] TestArray =>  _TestArray;
+            static  double[] _TestArray =  new double[]
             {{
 ");
                             int lineNumber = 0;

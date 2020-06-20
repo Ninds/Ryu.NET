@@ -5,7 +5,8 @@ namespace Ryu.Net.UnitTests.s2d_data
      class parse64minus_59 : IFPTestData
      {   
             public string TextFileName => "parse64minus/parse64minus_59.txt";
-            public  double[] TestArray =>  new double[]
+            public  double[] TestArray =>  _TestArray;
+            static  double[] _TestArray =  new double[]
             {
 
                  10892882791873447e-167,
