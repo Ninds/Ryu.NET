@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ryu.NET.s2d_data", "Ryu.Net
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateSmallerTestData", "utils\GenerateSmallerTestData\GenerateSmallerTestData.csproj", "{6775496C-41B0-452C-88AF-C8774F364309}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ryu.NET.Benchmark", "Ryu.NET.Benchmark\Ryu.NET.Benchmark.csproj", "{7157BFAB-0D37-447C-8AF2-78B2987C3AF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ryu.NET.Benchmark", "Ryu.NET.Benchmark\Ryu.NET.Benchmark.csproj", "{7157BFAB-0D37-447C-8AF2-78B2987C3AF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
