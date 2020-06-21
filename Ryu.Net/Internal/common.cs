@@ -4,9 +4,9 @@ using int32_t = System.Int32;
 using uint32_t = System.UInt32;
 using uint64_t = System.UInt64;
 
-namespace Ryu.Net.Internal
+namespace RyuDotNet.Internal
 {
-    public static unsafe partial class Ryu
+    internal static unsafe partial class Ryu
     {
         const int DOUBLE_MANTISSA_BITS = 52;
         const int DOUBLE_EXPONENT_BITS = 11;

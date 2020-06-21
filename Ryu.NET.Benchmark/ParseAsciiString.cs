@@ -1,9 +1,9 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Ryu.Net.UnitTests.s2d_data;
+using RyuDotNet.UnitTests.s2d_data;
 using System.Globalization;
 using System.Text;
 
-namespace Ryu.NET.Benchmark
+namespace RyuDotNet.Benchmark
 {
     [Config(typeof(RyuBenchMarkConfig))]
     public class ParseAsciiString
@@ -31,7 +31,7 @@ namespace Ryu.NET.Benchmark
             for (int i = 0; i < TestArray.Length; ++i)
             {
                 double x;
-                Ryu.Net.Internal.Ryu.s2d_n(TestArray[i], out x);
+                RyuDotNet.Internal.Ryu.s2d_n(TestArray[i], out x);
                 x = x + 1.0;
             }
         }

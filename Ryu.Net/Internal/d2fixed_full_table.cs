@@ -2,7 +2,7 @@
 using uint64_t = System.UInt64;
 using uint8_t = System.Byte;
 
-namespace Ryu.Net.Internal
+namespace RyuDotNet.Internal
 {
     unsafe partial class Ryu
     {

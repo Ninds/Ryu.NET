@@ -1,11 +1,11 @@
 ﻿using System;
-using static Ryu.Net.Internal.Status;
+using static RyuDotNet.Internal.Status;
 using int32_t = System.Int32;
 using uint32_t = System.UInt32;
 using uint64_t = System.UInt64;
 
 
-namespace Ryu.Net.Internal
+namespace RyuDotNet.Internal
 {
     unsafe partial class Ryu
     {
@@ -30,7 +30,7 @@ namespace Ryu.Net.Internal
             return *(double*)&bits;
         }
 
-        public static Status s2d_n(ReadOnlySpan<char> buffer, out double result)
+        internal static Status s2d_n(ReadOnlySpan<char> buffer, out double result)
         {
             result = 0;
             var len = buffer.Length;

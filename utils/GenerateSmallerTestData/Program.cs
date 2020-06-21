@@ -20,7 +20,7 @@ namespace GenerateTestData
                 using (var outputFile = new StreamWriter(Path.Combine("..", "..", "..", "..", "..", "Ryu.Net.s2d_data", "SmallTestSet.cs")))
                 {
                     outputFile.WriteLine(
-@$"namespace Ryu.Net.UnitTests.s2d_data
+@$"namespace RyuDotNet.UnitTests.s2d_data
 {{
 static byte[][] _TestAsciiArray = null;
 

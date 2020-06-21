@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Ryu.Net.Internal
+namespace RyuDotNet.Internal
 {
     sealed class AssertException : Exception
     {

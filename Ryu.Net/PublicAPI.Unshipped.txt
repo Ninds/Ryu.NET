@@ -1,0 +1,7 @@
+﻿RyuDotNet.Ryu
+static RyuDotNet.Ryu.Parse(System.ReadOnlySpan<byte> span) -> double
+static RyuDotNet.Ryu.Parse(System.ReadOnlySpan<char> span) -> double
+static RyuDotNet.Ryu.Parse(string str) -> double
+static RyuDotNet.Ryu.TryParse(System.ReadOnlySpan<byte> span, out double res) -> bool
+static RyuDotNet.Ryu.TryParse(System.ReadOnlySpan<char> span, out double res) -> bool
+static RyuDotNet.Ryu.TryParse(string str, out double res) -> bool

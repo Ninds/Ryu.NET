@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Ryu.Net.Internal
+namespace RyuDotNet.Internal
 {
     unsafe class native_one_dim_array<T> where T : unmanaged
     {

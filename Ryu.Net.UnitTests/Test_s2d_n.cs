@@ -1,5 +1,5 @@
-﻿using Ryu.Net.Internal;
-using Ryu.Net.UnitTests.s2d_data;
+﻿using RyuDotNet.Internal;
+using RyuDotNet.UnitTests.s2d_data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 
-namespace Ryu.Net.UnitTests
+namespace RyuDotNet.UnitTests
 {
     unsafe public class Test_s2d_n 
     {
@@ -29,7 +29,7 @@ namespace Ryu.Net.UnitTests
         
 
             double ryuVale;
-            var eq1 = Ryu.Net.Internal.Ryu.s2d_n(str.AsSpan(), out ryuVale);
+            var eq1 = RyuDotNet.Internal.Ryu.s2d_n(str.AsSpan(), out ryuVale);
             Assert.Equal(Status.SUCCESS, eq1);
             
            

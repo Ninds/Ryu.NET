@@ -2,7 +2,7 @@
 using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Jobs;
 
-namespace Ryu.NET.Benchmark
+namespace RyuDotNet.Benchmark
 {
     class RyuBenchMarkConfig : ManualConfig
     {

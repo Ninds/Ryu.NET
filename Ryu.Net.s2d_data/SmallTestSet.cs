@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Ryu.Net.UnitTests.s2d_data
+namespace RyuDotNet.UnitTests.s2d_data
 {
     public static class SmallTestSet
     {

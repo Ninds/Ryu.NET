@@ -5,7 +5,7 @@ using uint32_t = System.UInt32;
 using int64_t = System.Int64;
 using uint64_t = System.UInt64;
 
-namespace Ryu.Net.Internal
+namespace RyuDotNet.Internal
 {
     unsafe partial class Ryu
     {

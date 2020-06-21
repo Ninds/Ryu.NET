@@ -1,6 +1,6 @@
-﻿namespace Ryu.Net.Internal
+﻿namespace RyuDotNet.Internal
 {
-    public enum Status
+    internal enum Status
     {
         SUCCESS,
         INPUT_TOO_SHORT,

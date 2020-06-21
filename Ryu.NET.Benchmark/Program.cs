@@ -1,9 +1,8 @@
 ﻿using BenchmarkDotNet.Running;
 using System;
-using System.Diagnostics;
 using System.Reflection;
 
-namespace Ryu.NET.Benchmark
+namespace RyuDotNet.Benchmark
 {
     class Program
     {

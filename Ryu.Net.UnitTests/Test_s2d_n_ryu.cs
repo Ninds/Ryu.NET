@@ -1,8 +1,8 @@
-﻿using Ryu.Net.Internal;
+﻿using RyuDotNet.Internal;
 using System;
 using Xunit;
 
-namespace Ryu.Net.UnitTests
+namespace RyuDotNet.UnitTests
 {
     unsafe public class Test_s2d_test_cc
     {
@@ -53,7 +53,7 @@ namespace Ryu.Net.UnitTests
         public void TestRyu(double value,string str)
         {
             double ryuVale;
-            var eq1 = Ryu.Net.Internal.Ryu.s2d_n(str.AsSpan(), out ryuVale);
+            var eq1 = RyuDotNet.Internal.Ryu.s2d_n(str.AsSpan(), out ryuVale);
             Assert.Equal(Status.SUCCESS, eq1);
             Assert.Equal(double.Parse(str).ToString("G18"),ryuVale.ToString("G18"));
         }
