@@ -401,7 +401,7 @@ namespace RyuDotNet.Internal
             return true;
         }
 
-        public static int d2s_buffered_n(double f, char* result)
+        internal static int d2s_buffered_n(double f, char* result)
         {
             // Step 1: Decode the floating-point number, and unify normalized and subnormal cases.
             uint64_t bits = double_to_bits(f);
@@ -446,13 +446,6 @@ namespace RyuDotNet.Internal
             return to_chars(v, ieeeSign, result);
         }
 
-        public static void d2s_buffered(double f, char* result)
-        {
-            int index = d2s_buffered_n(f, result);
-
-            // Terminate the string.
-            result[index] = '\0';
-        }
-
+ 
     }
 }

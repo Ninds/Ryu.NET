@@ -9,8 +9,7 @@ namespace RyuDotNet.Internal
         const int POW10_ADDITIONAL_BITS = 120;
 
         // Returns the low 64 bits of the high 128 bits of the 256-bit product of a and b.
-        static uint64_t umul256_hi128_lo64(
-   uint64_t aHi, uint64_t aLo, uint64_t bHi, uint64_t bLo) {
+        static uint64_t umul256_hi128_lo64(uint64_t aHi, uint64_t aLo, uint64_t bHi, uint64_t bLo) {
             uint64_t b00Hi;
             uint64_t b00Lo = umul128(aLo, bLo, &b00Hi);
             uint64_t b01Hi;
@@ -222,7 +221,7 @@ namespace RyuDotNet.Internal
             return (sign ? 1 : 0) + 8;
         }
 
-        public static int d2fixed_buffered_n(double d, uint32_t precision, char* result)
+        internal static int d2fixed_buffered_n(double d, uint32_t precision, char* result)
         {
             uint64_t bits = double_to_bits(d);
 
@@ -432,15 +431,7 @@ namespace RyuDotNet.Internal
             return index;
         }
 
-        static void d2fixed_buffered(double d, uint32_t precision, char* result)
-        {
-            int len = d2fixed_buffered_n(d, precision, result);
-            result[len] = '\0';
-        }
-
-
-
-        public static int d2exp_buffered_n(double d, uint32_t precision, char* result)
+        internal static int d2exp_buffered_n(double d, uint32_t precision, char* result)
         {
             uint64_t bits = double_to_bits(d);
 
@@ -688,7 +679,7 @@ namespace RyuDotNet.Internal
                     }
                 }
             }
-            result[index++] = 'e';
+            result[index++] = 'E';
             if (exp < 0)
             {
                 result[index++] = '-';
@@ -715,11 +706,7 @@ namespace RyuDotNet.Internal
             return index;
         }
 
-        static void d2exp_buffered(double d, uint32_t precision, char* result)
-        {
-            int len = d2exp_buffered_n(d, precision, result);
-            result[len] = '\0';
-        }
+      
 
     }
 }
