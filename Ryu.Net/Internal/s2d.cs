@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using static RyuDotNet.Internal.Status;
 using int32_t = System.Int32;
 using uint32_t = System.UInt32;
@@ -27,7 +28,9 @@ namespace RyuDotNet.Internal
 
         static double int64Bits2Double(uint64_t bits)
         {
-            return *(double*)&bits;
+            Span<byte> asBytes = stackalloc byte[8];
+            MemoryMarshal.Write(asBytes, ref bits);
+            return MemoryMarshal.Read<double>(asBytes);
         }
 
         internal static Status s2d_n(ReadOnlySpan<char> buffer, out double result)
