@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateSmallerTestData", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ryu.NET.Benchmark", "Ryu.NET.Benchmark\Ryu.NET.Benchmark.csproj", "{7157BFAB-0D37-447C-8AF2-78B2987C3AF7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateD2STestData", "utils\GenerateD2STestData\GenerateD2STestData.csproj", "{1391ECC2-C78C-46BB-A987-2A6D2221F343}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{7157BFAB-0D37-447C-8AF2-78B2987C3AF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7157BFAB-0D37-447C-8AF2-78B2987C3AF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7157BFAB-0D37-447C-8AF2-78B2987C3AF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1391ECC2-C78C-46BB-A987-2A6D2221F343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1391ECC2-C78C-46BB-A987-2A6D2221F343}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1391ECC2-C78C-46BB-A987-2A6D2221F343}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1391ECC2-C78C-46BB-A987-2A6D2221F343}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +60,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{202DB3BF-5501-44A0-AAC0-3828B895E76A} = {E31FB050-0473-4D05-99B6-6C2FE219D61F}
 		{6775496C-41B0-452C-88AF-C8774F364309} = {E31FB050-0473-4D05-99B6-6C2FE219D61F}
+		{1391ECC2-C78C-46BB-A987-2A6D2221F343} = {E31FB050-0473-4D05-99B6-6C2FE219D61F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C07085A4-EB67-4FB6-9C87-93FBC7604744}

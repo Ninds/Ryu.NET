@@ -706,7 +706,5 @@ namespace RyuDotNet.Internal
             return index;
         }
 
-      
-
     }
 }

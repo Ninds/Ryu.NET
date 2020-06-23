@@ -23,3 +23,5 @@
 /Ryu.NET.Benchmark/obj
 utils/GenerateSmallerTestData/parse64minus.txt
 utils/GenerateSmallerTestData/parse64plus.txt
+/utils/GenerateD2STestData/bin
+/utils/GenerateD2STestData/obj

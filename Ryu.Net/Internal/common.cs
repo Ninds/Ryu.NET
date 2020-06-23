@@ -120,7 +120,7 @@ namespace RyuDotNet.Internal
             return *(uint32_t*)&f;
         }
 
-        static uint64_t double_to_bits(double d)
+        internal static uint64_t double_to_bits(double d)
         {
             return *(uint64_t*)&d;
         }

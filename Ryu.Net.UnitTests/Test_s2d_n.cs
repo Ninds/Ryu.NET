@@ -12,7 +12,7 @@ namespace RyuDotNet.UnitTests
     unsafe public class Test_s2d_n 
     {
        // [Theory]
-       // [ClassData(typeof(DataGenerator))]
+        [ClassData(typeof(DataGenerator))]
         public void TestDataSelfConsistency(string str, double val) =>
             Assert.Equal(double.Parse(str), val);
 
@@ -20,7 +20,7 @@ namespace RyuDotNet.UnitTests
 
         // Probably not best to run these tests through VS's test runner
         // Run them ftom the command line  'dotnet test RyuCsharp.UnitTests.dll'
-        //[Theory]
+        [Theory]
         [InlineData("1.2999999999999999E+154", 1.2999999999999999E+154)]
         [ClassData(typeof(DataGenerator))]
         public void TestWithRemysIteratoutput(string str, double val)
@@ -35,10 +35,10 @@ namespace RyuDotNet.UnitTests
            
             //Uncomment the following code to produce a text file
             //summarising the Failed tests. 
-            if (ryuVale.ToString("G18") != double.Parse(str).ToString("G18"))
-            {
-                File.AppendAllText(@"../.././../FAILS.txt", $"string={str}  ryuVal={ryuVale.ToString("G18")}  cs={double.Parse(str).ToString("G18")}\r\n");
-            }
+            //if (ryuVale.ToString("G18") != double.Parse(str).ToString("G18"))
+            //{
+            //    File.AppendAllText(@"../.././../FAILS.txt", $"string={str}  ryuVal={ryuVale.ToString("G18")}  cs={double.Parse(str).ToString("G18")}\r\n");
+            //}
 
 
             Assert.Equal(ryuVale.ToString("G18"), double.Parse(str).ToString("G18"));

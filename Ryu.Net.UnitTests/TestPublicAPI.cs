@@ -6,7 +6,6 @@ namespace RyuDotNet.UnitTests
 {
     public class TestPublicApi
     {
-        
         [Theory]
         [ClassData(typeof(SmallDataGenerator))]
         public void Test_TryParse_char(string str)

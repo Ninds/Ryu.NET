@@ -33,7 +33,7 @@ namespace RyuDotNet.Internal
             return 1;
         }
 
-        static floating_decimal_64 d2d(uint64_t ieeeMantissa, uint32_t ieeeExponent)
+        internal static floating_decimal_64 d2d(uint64_t ieeeMantissa, uint32_t ieeeExponent)
         {
             int32_t e2;
             uint64_t m2;
@@ -246,7 +246,7 @@ namespace RyuDotNet.Internal
             return fd;
         }
 
-        static int to_chars(floating_decimal_64 v, bool sign, char* result)
+        internal static int to_chars(floating_decimal_64 v, bool sign, char* result)
         {
             // Step 5: Print the decimal representation.
             int index = 0;
