@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using static RyuDotNet.Internal.Status;
 using int32_t = System.Int32;
@@ -26,6 +27,7 @@ namespace RyuDotNet.Internal
             return a < b ? b : a;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static double int64Bits2Double(uint64_t bits)
         {
             Span<byte> asBytes = stackalloc byte[8];
@@ -33,10 +35,10 @@ namespace RyuDotNet.Internal
             return MemoryMarshal.Read<double>(asBytes);
         }
 
-        internal static Status s2d_n(ReadOnlySpan<char> buffer, out double result)
+        internal static Status s2d_n_inner(ReadOnlySpan<byte> buffer, int bitshift, out double result)
         {
             result = 0;
-            var len = buffer.Length;
+            var len = buffer.Length >> bitshift;
             if (len == 0)
             {
                 return INPUT_TOO_SHORT;
@@ -57,7 +59,7 @@ namespace RyuDotNet.Internal
             }
             for (; i < len; i++)
             {
-                char c = buffer[i];
+                byte c = buffer[i << bitshift];
                 if (c == '.')
                 {
                     if (dotIndex != len)
@@ -75,24 +77,24 @@ namespace RyuDotNet.Internal
                 {
                     return INPUT_TOO_LONG;
                 }
-                m10 = 10 * m10 + (char)(c - '0');
+                m10 = (10 * m10) + (uint64_t)(c - '0');
                 if (m10 != 0)
                 {
                     m10digits++;
                 }
             }
-            if (i < len && ((buffer[i] == 'e') || (buffer[i] == 'E')))
+            if (i < len && ((buffer[i << bitshift] == 'e') || (buffer[i << bitshift] == 'E')))
             {
                 eIndex = i;
                 i++;
-                if (i < len && ((buffer[i] == '-') || (buffer[i] == '+')))
+                if (i < len && ((buffer[i << bitshift] == '-') || (buffer[i << bitshift] == '+')))
                 {
-                    signedE = buffer[i] == '-';
+                    signedE = buffer[i << bitshift] == '-';
                     i++;
                 }
                 for (; i < len; i++)
                 {
-                    char c = buffer[i];
+                    byte c = buffer[i << bitshift];
                     if ((c < '0') || (c > '9'))
                     {
                         return MALFORMED_INPUT;
@@ -220,6 +222,16 @@ namespace RyuDotNet.Internal
             uint64_t ieee2 = (((((uint64_t)(signedM ? 1 : 0)) << DOUBLE_EXPONENT_BITS) | (uint64_t)ieee_e2) << DOUBLE_MANTISSA_BITS) | ieee_m2;
             result = int64Bits2Double(ieee2);
             return SUCCESS;
+        }
+
+        internal static Status s2d_n(ReadOnlySpan<char> buffer, out double result)
+        {
+            return s2d_n_inner(MemoryMarshal.AsBytes(buffer),1,out result);
+        }
+
+        internal static Status s2d_n(ReadOnlySpan<byte> buffer, out double result)
+        {
+            return s2d_n_inner(buffer, 0, out result);
         }
 
     }
