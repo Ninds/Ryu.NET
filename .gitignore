@@ -25,3 +25,7 @@ utils/GenerateSmallerTestData/parse64minus.txt
 utils/GenerateSmallerTestData/parse64plus.txt
 /utils/GenerateD2STestData/bin
 /utils/GenerateD2STestData/obj
+/utils/GenerateD2SSmallerTestData/bin
+/utils/GenerateD2SSmallerTestData/obj
+/utils/GenerateD2SSmallerTestData/Properties/launchSettings.json
+/utils/GenerateD2STestData/Properties/launchSettings.json
