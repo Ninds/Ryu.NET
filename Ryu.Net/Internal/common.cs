@@ -129,11 +129,11 @@ namespace RyuDotNet.Internal
             for (int i = 0; i < _Src.Length; ++i) _Dst[i] = (byte)_Src[i];
         }
 
-        static void memset(AlphaSpan _Dst, byte _Val, uint32_t _Size )
+        static void memset(AlphaSpan _Dst, int start,byte _Val, uint32_t _Size )
         {
             for (int i = 0; i < _Size; i++)
             {
-                _Dst[i] = _Val;
+                _Dst[start++] = _Val;
             }
         }
 

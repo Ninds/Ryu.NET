@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace RyuDotNet.Internal
 {
@@ -28,10 +29,11 @@ namespace RyuDotNet.Internal
         };
         // memcpy(result.Slice((int)(index + olength - i - 1)), DIGIT_TABLE.Slice((int)c0, 2));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static void Copy2BytesFromDigitTable(AlphaSpan result, long startDest, uint StartSrc)
         {
-            result[(int)startDest] = DIGIT_TABLE[(int)StartSrc];
-            result[(int)startDest +1] = DIGIT_TABLE[(int)StartSrc + 1];
+            result[(int)startDest++] = DIGIT_TABLE[(int)StartSrc++];
+            result[(int)startDest]   = DIGIT_TABLE[(int)StartSrc];
         }
     }
 }

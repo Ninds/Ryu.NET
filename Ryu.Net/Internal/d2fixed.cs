@@ -161,7 +161,7 @@ namespace RyuDotNet.Internal
         {
             if (digits == 0)
             {
-                memset(result, (byte)'0', 9);
+                memset(result, 0,(byte)'0', 9);
                 return;
             }
 
@@ -239,7 +239,7 @@ namespace RyuDotNet.Internal
                 if (precision > 0)
                 {
                     result[index2++] = (byte)'.';
-                    memset(result, (byte)'0', precision);
+                    memset(result,0, (byte)'0', precision);
                     index2 += (int)precision;
                 }
                 return index2;
@@ -310,13 +310,13 @@ namespace RyuDotNet.Internal
                 if (blocks <= MIN_BLOCK_2[(uint)idx])
                 {
                     i = blocks;
-                    memset(result.Slice(index), (byte)'0', precision);
+                    memset(result,index, (byte)'0', precision);
                     index += (int)precision;
                 }
                 else if (i < MIN_BLOCK_2[(uint)idx])
                 {
                     i = MIN_BLOCK_2[(uint)idx];
-                    memset(result.Slice(index), (byte)'0', 9 * i);
+                    memset(result,index, (byte)'0', 9 * i);
                     index += (int)(9 * i);
                 }
                 for (; i < blocks; ++i)
@@ -328,7 +328,7 @@ namespace RyuDotNet.Internal
                         // If the remaining digits are all 0, then we might as well use memset.
                         // No rounding required in this case.
                         uint32_t fill = precision - 9 * i;
-                        memset(result.Slice(index), (byte)'0', fill);
+                        memset(result,index, (byte)'0', fill);
                         index += (int)fill;
                         break;
                     }
@@ -417,7 +417,7 @@ namespace RyuDotNet.Internal
             }
             else
             {
-                memset(result.Slice(index), (byte)'0', precision);
+                memset(result,index, (byte)'0', precision);
                 index += (int)precision;
             }
             return index;
@@ -449,7 +449,7 @@ namespace RyuDotNet.Internal
                 if (precision > 0)
                 {
                     result[index2++] = (byte)'.';
-                    memset(result.Slice(index2), (byte)'0', precision);
+                    memset(result,index2, (byte)'0', precision);
                     index2 += (int)precision;
                 }
                 memcpy(result.Slice(index2), "E+00");
@@ -616,7 +616,7 @@ namespace RyuDotNet.Internal
             {
                 if (digits == 0)
                 {
-                    memset(result.Slice(index), (byte)'0', maximum);
+                    memset(result,index, (byte)'0', maximum);
                 }
                 else
                 {
