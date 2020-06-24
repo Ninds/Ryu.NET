@@ -2,9 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
  
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Internal\f2s.cs" />
+    <Compile Remove="Internal\f2s_full_table.cs" />
+  </ItemGroup>
 
 
   <ItemGroup>
@@ -20,6 +26,12 @@
   <ItemGroup>
     <AdditionalFiles Include="PublicAPI.Shipped.txt" />
     <AdditionalFiles Include="PublicAPI.Unshipped.txt" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="Internal\f2s.cs" />
+    <None Include="Internal\f2s_full_table.cs" />
   </ItemGroup>
   
 </Project>

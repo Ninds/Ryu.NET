@@ -11,7 +11,7 @@ namespace RyuDotNet.UnitTests
     unsafe public class Test_s2d_n_small 
     {
         
-        //[Theory]
+       [Theory]
         [InlineData("1.2999999999999999E+154")]
         [ClassData(typeof(SmallDataGenerator))]
         public void TestWithSmall(string str)
@@ -24,7 +24,7 @@ namespace RyuDotNet.UnitTests
 
         }
 
-        //[Theory]
+        [Theory]
         [ClassData(typeof(SmallAsciiDataGenerator))]
         public void TestWithSmall_Ascii(byte[] ascii, string utf16)
         {

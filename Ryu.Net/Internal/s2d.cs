@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using static RyuDotNet.Internal.Status;
@@ -35,10 +36,10 @@ namespace RyuDotNet.Internal
             return MemoryMarshal.Read<double>(asBytes);
         }
 
-        internal static Status s2d_n_inner(ReadOnlySpan<byte> buffer, int bitshift, out double result)
+        internal static Status s2d_n_inner(ReadOnlyAlphaSpan buffer, out double result)
         {
             result = 0;
-            var len = buffer.Length >> bitshift;
+            var len = buffer.Length;
             if (len == 0)
             {
                 return INPUT_TOO_SHORT;
@@ -59,7 +60,7 @@ namespace RyuDotNet.Internal
             }
             for (; i < len; i++)
             {
-                byte c = buffer[i << bitshift];
+                byte c = buffer[i];
                 if (c == '.')
                 {
                     if (dotIndex != len)
@@ -83,18 +84,18 @@ namespace RyuDotNet.Internal
                     m10digits++;
                 }
             }
-            if (i < len && ((buffer[i << bitshift] == 'e') || (buffer[i << bitshift] == 'E')))
+            if (i < len && ((buffer[i] == 'e') || (buffer[i] == 'E')))
             {
                 eIndex = i;
                 i++;
-                if (i < len && ((buffer[i << bitshift] == '-') || (buffer[i << bitshift] == '+')))
+                if (i < len && ((buffer[i] == '-') || (buffer[i] == '+')))
                 {
-                    signedE = buffer[i << bitshift] == '-';
+                    signedE = buffer[i] == '-';
                     i++;
                 }
                 for (; i < len; i++)
                 {
-                    byte c = buffer[i << bitshift];
+                    byte c = buffer[i];
                     if ((c < '0') || (c > '9'))
                     {
                         return MALFORMED_INPUT;
@@ -226,12 +227,12 @@ namespace RyuDotNet.Internal
 
         internal static Status s2d_n(ReadOnlySpan<char> buffer, out double result)
         {
-            return s2d_n_inner(MemoryMarshal.AsBytes(buffer),1,out result);
+            return s2d_n_inner(new ReadOnlyAlphaSpan(buffer),out result);
         }
 
         internal static Status s2d_n(ReadOnlySpan<byte> buffer, out double result)
         {
-            return s2d_n_inner(buffer, 0, out result);
+            return s2d_n_inner(new ReadOnlyAlphaSpan(buffer), out result);
         }
 
     }

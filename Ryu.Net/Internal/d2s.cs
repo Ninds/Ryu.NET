@@ -246,13 +246,13 @@ namespace RyuDotNet.Internal
             return fd;
         }
 
-        internal static int to_chars(floating_decimal_64 v, bool sign, char* result)
+        internal static int to_chars(floating_decimal_64 v, bool sign, AlphaSpan result)
         {
             // Step 5: Print the decimal representation.
             int index = 0;
             if (sign)
             {
-                result[index++] = '-';
+                result[index++] = (byte)'-';
             }
 
             uint64_t output = v.mantissa;
@@ -286,50 +286,48 @@ namespace RyuDotNet.Internal
                 uint32_t c1 = (c / 100) << 1;
                 uint32_t d0 = (d % 100) << 1;
                 uint32_t d1 = (d / 100) << 1;
-                memcpy(result + index + olength - i - 1, DIGIT_TABLE + c0, 2);
-                memcpy(result + index + olength - i - 3, DIGIT_TABLE + c1, 2);
-                memcpy(result + index + olength - i - 5, DIGIT_TABLE + d0, 2);
-                memcpy(result + index + olength - i - 7, DIGIT_TABLE + d1, 2);
+                memcpy(result.Slice((int)(index + olength - i - 1)), DIGIT_TABLE.Slice((int)c0, 2));
+                memcpy(result.Slice((int)(index + olength - i - 3)), DIGIT_TABLE.Slice((int)c1, 2));
+                memcpy(result.Slice((int)(index + olength - i - 5)), DIGIT_TABLE.Slice((int)d0, 2));
+                memcpy(result.Slice((int)(index + olength - i - 7)), DIGIT_TABLE.Slice((int)d1, 2));
                 i += 8;
             }
             uint32_t output2 = (uint32_t)output;
             while (output2 >= 10000)
             {
-#if __clang__ // https://bugs.llvm.org/show_bug.cgi?id=38217
-                uint32_t c = output2 - 10000 * (output2 / 10000);
-#else
+
                 uint32_t c = output2 % 10000;
-#endif
+
                 output2 /= 10000;
                 uint32_t c0 = (c % 100) << 1;
                 uint32_t c1 = (c / 100) << 1;
-                memcpy(result + index + olength - i - 1, DIGIT_TABLE + c0, 2);
-                memcpy(result + index + olength - i - 3, DIGIT_TABLE + c1, 2);
+                memcpy(result.Slice((int)(index + olength - i - 1)), DIGIT_TABLE.Slice((int)c0, 2));
+                memcpy(result.Slice((int)(index + olength - i - 3)), DIGIT_TABLE.Slice((int)c1, 2));
                 i += 4;
             }
             if (output2 >= 100)
             {
                 uint32_t c = (output2 % 100) << 1;
                 output2 /= 100;
-                memcpy(result + index + olength - i - 1, DIGIT_TABLE + c, 2);
+                memcpy(result.Slice((int)(index + olength - i - 1)), DIGIT_TABLE.Slice((int)c, 2));
                 i += 2;
             }
             if (output2 >= 10)
             {
                 uint32_t c = output2 << 1;
                 // We can't use memcpy here: the decimal dot goes between these two digits.
-                result[index + olength - i] = DIGIT_TABLE[c + 1];
-                result[index] = DIGIT_TABLE[c];
+                result[(int)(index + olength - i)] = DIGIT_TABLE[(int)(c + 1)];
+                result[index] = DIGIT_TABLE[(int)c];
             }
             else
             {
-                result[index] = (char)('0' + output2);
+                result[index] = (byte)('0' + output2);
             }
 
             // Print decimal point if needed.
             if (olength > 1)
             {
-                result[index + 1] = '.';
+                result[index + 1] = (byte)'.';
                 index += (int)olength + 1;
             }
             else
@@ -338,29 +336,29 @@ namespace RyuDotNet.Internal
             }
 
             // Print the exponent.
-            result[index++] = 'E';
+            result[index++] = (byte)'E';
             int32_t exp = v.exponent + (int32_t)olength - 1;
             if (exp < 0)
             {
-                result[index++] = '-';
+                result[index++] = (byte)'-';
                 exp = -exp;
             }
 
             if (exp >= 100)
             {
                 int32_t c = exp % 10;
-                memcpy(result + index, DIGIT_TABLE + 2 * (uint)(exp / 10), 2);
-                result[index + 2] = (char)('0' + c);
+                memcpy(result.Slice((int)(index)), DIGIT_TABLE.Slice((int)(2 * (uint)(exp / 10)), 2));
+                result[index + 2] = (byte)('0' + c);
                 index += 3;
             }
             else if (exp >= 10)
             {
-                memcpy(result + index, DIGIT_TABLE + 2 * (uint)exp, 2);
+                memcpy(result.Slice(index), DIGIT_TABLE.Slice((int)(2 * (uint)exp), 2));
                 index += 2;
             }
             else
             {
-                result[index++] = (char)('0' + exp);
+                result[index++] = (byte)('0' + exp);
             }
 
             return index;
@@ -401,7 +399,7 @@ namespace RyuDotNet.Internal
             return true;
         }
 
-        internal static int d2s_buffered_n(double f, char* result)
+        internal static int d2s_buffered_n(double f, AlphaSpan result)
         {
             // Step 1: Decode the floating-point number, and unify normalized and subnormal cases.
             uint64_t bits = double_to_bits(f);

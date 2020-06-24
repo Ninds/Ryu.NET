@@ -61,43 +61,40 @@ namespace RyuDotNet.Internal
             return uint128_mod1e9(shiftedhigh, shiftedlow);
         }
 
-        static void append_n_digits(uint32_t olength, uint32_t digits, char* result)
+        static void append_n_digits(uint32_t olength, uint32_t digits, AlphaSpan result)
         {
 
             uint32_t i = 0;
             while (digits >= 10000)
             {
-#if __clang__ // https://bugs.llvm.org/show_bug.cgi?id=38217
-         uint32_t c = digits - 10000 * (digits / 10000);
-#else
+
                 uint32_t c = digits % 10000;
-#endif
                 digits /= 10000;
                 uint32_t c0 = (c % 100) << 1;
                 uint32_t c1 = (c / 100) << 1;
-                memcpy(result + olength - i - 2, DIGIT_TABLE + c0, 2);
-                memcpy(result + olength - i - 4, DIGIT_TABLE + c1, 2);
+                memcpy(result.Slice((int)( olength - i - 2)), DIGIT_TABLE.Slice((int)c0, 2));
+                memcpy(result.Slice((int)( olength - i - 4)), DIGIT_TABLE.Slice((int)c1, 2));
                 i += 4;
             }
             if (digits >= 100)
             {
                 uint32_t c = (digits % 100) << 1;
                 digits /= 100;
-                memcpy(result + olength - i - 2, DIGIT_TABLE + c, 2);
+                memcpy(result.Slice((int)(olength - i - 2)), DIGIT_TABLE.Slice((int)c, 2));
                 i += 2;
             }
             if (digits >= 10)
             {
                 uint32_t c = digits << 1;
-                memcpy(result + olength - i - 2, DIGIT_TABLE + c, 2);
+                memcpy(result.Slice((int)(olength - i - 2)), DIGIT_TABLE.Slice((int)c, 2));
             }
             else
             {
-                result[0] = (char)('0' + digits);
+                result[0] = (byte)('0' + digits);
             }
         }
 
-        static void append_d_digits(uint32_t olength, uint32_t digits, char* result)
+        static void append_d_digits(uint32_t olength, uint32_t digits, AlphaSpan result)
         {
             uint32_t i = 0;
             while (digits >= 10000)
@@ -110,52 +107,52 @@ namespace RyuDotNet.Internal
                 digits /= 10000;
                  uint32_t c0 = (c % 100) << 1;
                  uint32_t c1 = (c / 100) << 1;
-                memcpy(result + olength + 1 - i - 2, DIGIT_TABLE + c0, 2);
-                memcpy(result + olength + 1 - i - 4, DIGIT_TABLE + c1, 2);
+                memcpy(result.Slice((int)(olength + 1 - i - 2)), DIGIT_TABLE.Slice((int)c0, 2));
+                memcpy(result.Slice((int)(olength + 1 - i - 4)), DIGIT_TABLE.Slice((int)c1, 2));
                 i += 4;
             }
             if (digits >= 100)
             {
                 uint32_t c = (digits % 100) << 1;
                 digits /= 100;
-                memcpy(result + olength + 1 - i - 2, DIGIT_TABLE + c, 2);
+                memcpy(result.Slice((int)(olength + 1 - i - 2)), DIGIT_TABLE.Slice((int)c, 2));
                 i += 2;
             }
             if (digits >= 10)
             {
                 uint32_t c = digits << 1;
-                result[2] = DIGIT_TABLE[c + 1];
-                result[1] = '.';
-                result[0] = DIGIT_TABLE[c];
+                result[2] = DIGIT_TABLE[(int)(c + 1)];
+                result[1] = (byte)'.';
+                result[0] = DIGIT_TABLE[(int)c];
             }
             else
             {
-                result[1] = '.';
-                result[0] = (char)('0' + digits);
+                result[1] = (byte)'.';
+                result[0] = (byte)('0' + digits);
             }
         }
 
-        static void append_c_digits(uint32_t count, uint32_t digits, char* result)
+        static void append_c_digits(uint32_t count, uint32_t digits, AlphaSpan result)
         {
             uint32_t i = 0;
             for (; i < count - 1; i += 2)
             {
                 uint32_t c = (digits % 100) << 1;
                 digits /= 100;
-                memcpy(result + count - i - 2, DIGIT_TABLE + c, 2);
+                memcpy(result.Slice((int)(count - i - 2)), DIGIT_TABLE.Slice((int)c, 2));
             }
             if (i < count)
             {
-                char c = (char)('0' + (digits % 10));
-                result[count - i - 1] = c;
+                byte c = (byte)('0' + (digits % 10));
+                result[(int)(count - i - 1)] = c;
             }
         }
 
-        static void append_nine_digits(uint32_t digits, char* result)
+        static void append_nine_digits(uint32_t digits, AlphaSpan result)
         {
             if (digits == 0)
             {
-                memset(result, '0', 9);
+                memset(result, (byte)'0', 9);
                 return;
             }
 
@@ -169,10 +166,10 @@ namespace RyuDotNet.Internal
                 digits /= 10000;
                  uint32_t c0 = (c % 100) << 1;
                  uint32_t c1 = (c / 100) << 1;
-                memcpy(result + 7 - i, DIGIT_TABLE + c0, 2);
-                memcpy(result + 5 - i, DIGIT_TABLE + c1, 2);
+                memcpy(result.Slice((int)(7 - i)), DIGIT_TABLE.Slice((int)c0, 2));
+                memcpy(result.Slice((int)(5 - i)), DIGIT_TABLE.Slice((int)c1, 2));
             }
-            result[0] = (char)('0' + digits);
+            result[0] = (byte)('0' + digits);
         }
 
         static uint32_t indexForExponent(uint32_t e)
@@ -191,7 +188,7 @@ namespace RyuDotNet.Internal
             return (log10Pow2(16 * (int32_t)idx) + 1 + 16 + 8) / 9;
         }
 
-        static int copy_special_str_printf(char* result, bool sign, uint64_t mantissa)
+        static int copy_special_str_printf(AlphaSpan result, bool sign, uint64_t mantissa)
         {
 #if _MSC_VER
   // TODO: Check that -nan is expected output on Windows.
@@ -200,28 +197,28 @@ namespace RyuDotNet.Internal
   }
   if (mantissa != 0) {
     if (mantissa < (1ull << (DOUBLE_MANTISSA_BITS - 1))) {
-      memcpy(result + sign, "nan(snan)", 9);
+      memcpy(result.Slice((int)(sign, "nan(snan)", 9);
       return sign + 9;
     }
-    memcpy(result + sign, "nan", 3);
+    memcpy(result.Slice((int)(sign, "nan", 3);
     return sign + 3;
   }
 #else
             if (mantissa != 0)
             {
-                memcpy(result, "nan", 3);
+                memcpy(result, "nan");
                 return 3;
             }
             if (sign)
             {
-                result[0] = '-';
+                result[0] = (byte)'-';
             }
 #endif
-            memcpy(result + (sign ? 1 : 0), "Infinity", 8);
+            memcpy(result.Slice((int)((sign ? 1 : 0))), "Infinity");
             return (sign ? 1 : 0) + 8;
         }
 
-        internal static int d2fixed_buffered_n(double d, uint32_t precision, char* result)
+        internal static int d2fixed_buffered_n(double d, uint32_t precision, AlphaSpan result)
         {
             uint64_t bits = double_to_bits(d);
 
@@ -241,13 +238,14 @@ namespace RyuDotNet.Internal
                 int index2 = 0;
                 if (ieeeSign)
                 {
-                    result[index2++] = '-';
+                    result[index2++] = (byte)'-';
                 }
-                result[index2++] = '0';
+                result[index2++] = (byte)'0';
                 if (precision > 0)
                 {
-                    result[index2++] = '.';
-                    memset(result + index2, '0', precision);
+                    result[index2++] = (byte)'.';
+                    //memset(result + index2, '0', precision);
+                    memset(result.Slice(0), (byte)'0', precision);
                     index2 += (int)precision;
                 }
                 return index2;
@@ -271,7 +269,7 @@ namespace RyuDotNet.Internal
             bool nonzero = false;
             if (ieeeSign)
             {
-                result[index++] = '-';
+                result[index++] = (byte)'-';
             }
             if (e2 >= -52)
             {
@@ -287,13 +285,13 @@ namespace RyuDotNet.Internal
                     uint32_t digits = mulShift_mod1e9(m2 << 8, POW10_SPLIT[(uint)(POW10_OFFSET[(uint)idx] + i)], (int32_t)(j + 8));
                     if (nonzero)
                     {
-                        append_nine_digits(digits, result + index);
+                        append_nine_digits(digits,  result.Slice(index));
                         index += 9;
                     }
                     else if (digits != 0)
                     {
                         uint32_t olength = decimalLength9(digits);
-                        append_n_digits(olength, digits, result + index);
+                        append_n_digits(olength, digits,  result.Slice(index));
                         index += (int)olength;
                         nonzero = true;
                     }
@@ -301,11 +299,11 @@ namespace RyuDotNet.Internal
             }
             if (!nonzero)
             {
-                result[index++] = '0';
+                result[index++] = (byte)'0';
             }
             if (precision > 0)
             {
-                result[index++] = '.';
+                result[index++] = (byte)'.';
             }
             if (e2 < 0)
             {
@@ -318,13 +316,13 @@ namespace RyuDotNet.Internal
                 if (blocks <= MIN_BLOCK_2[(uint)idx])
                 {
                     i = blocks;
-                    memset(result + index, '0', precision);
+                    memset(result.Slice(index), (byte)'0', precision);
                     index += (int)precision;
                 }
                 else if (i < MIN_BLOCK_2[(uint)idx])
                 {
                     i = MIN_BLOCK_2[(uint)idx];
-                    memset(result + index, '0', 9 * i);
+                    memset(result.Slice(index), (byte)'0', 9 * i);
                     index += (int)(9 * i);
                 }
                 for (; i < blocks; ++i)
@@ -336,7 +334,7 @@ namespace RyuDotNet.Internal
                         // If the remaining digits are all 0, then we might as well use memset.
                         // No rounding required in this case.
                         uint32_t fill = precision - 9 * i;
-                        memset(result + index, '0', fill);
+                        memset(result.Slice(index), (byte)'0', fill);
                         index += (int)fill;
                         break;
                     }
@@ -346,7 +344,7 @@ namespace RyuDotNet.Internal
 
                     if (i < blocks - 1)
                     {
-                        append_nine_digits(digits, result + index);
+                        append_nine_digits(digits,  result.Slice(index));
                         index += 9;
                     }
                     else
@@ -374,7 +372,7 @@ namespace RyuDotNet.Internal
                         }
                         if (maximum > 0)
                         {
-                            append_c_digits(maximum, digits, result + index);
+                            append_c_digits(maximum, digits,  result.Slice(index));
                             index += (int)maximum;
                         }
                         break;
@@ -388,16 +386,16 @@ namespace RyuDotNet.Internal
                     while (true)
                     {
                         --roundIndex;
-                        char c;
-                        if (roundIndex == -1 || (c = result[roundIndex]) == '-')
+                        byte c;
+                        if (roundIndex == -1 || (c = result[roundIndex]) == (byte)'-')
                         {
-                            result[roundIndex + 1] = '1';
+                            result[roundIndex + 1] = (byte)'1';
                             if (dotIndex > 0)
                             {
-                                result[dotIndex] = '0';
-                                result[dotIndex + 1] = '.';
+                                result[dotIndex] = (byte)'0';
+                                result[dotIndex + 1] = (byte)'.';
                             }
-                            result[index++] = '0';
+                            result[index++] = (byte)'0';
                             break;
                         }
                         if (c == '.')
@@ -407,7 +405,7 @@ namespace RyuDotNet.Internal
                         }
                         else if (c == '9')
                         {
-                            result[roundIndex] = '0';
+                            result[roundIndex] = (byte)'0';
                             roundUp = 1;
                             continue;
                         }
@@ -417,7 +415,7 @@ namespace RyuDotNet.Internal
                             {
                                 break;
                             }
-                            result[roundIndex] = (char)(c + 1);
+                            result[roundIndex] = (byte)(c + 1);
                             break;
                         }
                     }
@@ -425,13 +423,13 @@ namespace RyuDotNet.Internal
             }
             else
             {
-                memset(result + index, '0', precision);
+                memset(result.Slice(index), (byte)'0', precision);
                 index += (int)precision;
             }
             return index;
         }
 
-        internal static int d2exp_buffered_n(double d, uint32_t precision, char* result)
+        internal static int d2exp_buffered_n(double d, uint32_t precision, AlphaSpan result)
         {
             uint64_t bits = double_to_bits(d);
 
@@ -451,16 +449,16 @@ namespace RyuDotNet.Internal
                 int index2 = 0;
                 if (ieeeSign)
                 {
-                    result[index2++] = '-';
+                    result[index2++] = (byte)'-';
                 }
-                result[index2++] = '0';
+                result[index2++] = (byte)'0';
                 if (precision > 0)
                 {
-                    result[index2++] = '.';
-                    memset(result + index2, '0', precision);
+                    result[index2++] = (byte)'.';
+                    memset(result.Slice(index2), (byte)'0', precision);
                     index2 += (int)precision;
                 }
-                memcpy(result + index2, "e+00", 4);
+                memcpy(result.Slice(index2), "E+00");
                 index2 += 4;
                 return index2;
             }
@@ -484,7 +482,7 @@ namespace RyuDotNet.Internal
             int index = 0;
             if (ieeeSign)
             {
-                result[index++] = '-';
+                result[index++] = (byte)'-';
             }
             uint32_t digits = 0;
             uint32_t printedDigits = 0;
@@ -509,7 +507,7 @@ namespace RyuDotNet.Internal
                             availableDigits = 9;
                             break;
                         }
-                        append_nine_digits(digits, result + index);
+                        append_nine_digits(digits,  result.Slice(index));
                         index += 9;
                         printedDigits += 9;
                     }
@@ -523,12 +521,12 @@ namespace RyuDotNet.Internal
                         }
                         if (printDecimalPoint)
                         {
-                            append_d_digits(availableDigits, digits, result + index);
+                            append_d_digits(availableDigits, digits,  result.Slice(index));
                             index += (int)(availableDigits + 1); // +1 for decimal point
                         }
                         else
                         {
-                            result[index++] = (char)('0' + digits);
+                            result[index++] = (byte)('0' + digits);
                         }
                         printedDigits = availableDigits;
                         availableDigits = 0;
@@ -555,7 +553,7 @@ namespace RyuDotNet.Internal
                             availableDigits = 9;
                             break;
                         }
-                        append_nine_digits(digits, result + index);
+                        append_nine_digits(digits, result.Slice(index));
                         index += 9;
                         printedDigits += 9;
                     }
@@ -569,12 +567,12 @@ namespace RyuDotNet.Internal
                         }
                         if (printDecimalPoint)
                         {
-                            append_d_digits(availableDigits, digits, result + index);
+                            append_d_digits(availableDigits, digits,  result.Slice(index));
                             index += (int)(availableDigits + 1); // +1 for decimal point
                         }
                         else
                         {
-                            result[index++] = (char)('0' + digits);
+                            result[index++] = (byte)('0' + digits);
                         }
                         printedDigits = availableDigits;
                         availableDigits = 0;
@@ -624,11 +622,11 @@ namespace RyuDotNet.Internal
             {
                 if (digits == 0)
                 {
-                    memset(result + index, '0', maximum);
+                    memset(result.Slice(index), (byte)'0', maximum);
                 }
                 else
                 {
-                    append_c_digits(maximum, digits, result + index);
+                    append_c_digits(maximum, digits, result.Slice(index));
                 }
                 index += (int)maximum;
             }
@@ -636,12 +634,12 @@ namespace RyuDotNet.Internal
             {
                 if (printDecimalPoint)
                 {
-                    append_d_digits(maximum, digits, result + index);
+                    append_d_digits(maximum, digits, result.Slice(index));
                     index += (int)(maximum + 1); // +1 for decimal point
                 }
                 else
                 {
-                    result[index++] = (char)('0' + digits);
+                    result[index++] = (byte)('0' + digits);
                 }
             }
 
@@ -651,10 +649,10 @@ namespace RyuDotNet.Internal
                 while (true)
                 {
                     --roundIndex;
-                    char c;
-                    if (roundIndex == -1 || ((c = result[roundIndex]) == '-'))
+                    byte c;
+                    if (roundIndex == -1 || ((c = result[roundIndex]) == (byte)'-'))
                     {
-                        result[roundIndex + 1] = '1';
+                        result[roundIndex + 1] = (byte)'1';
                         ++exp;
                         break;
                     }
@@ -664,7 +662,7 @@ namespace RyuDotNet.Internal
                     }
                     else if (c == '9')
                     {
-                        result[roundIndex] = '0';
+                        result[roundIndex] = (byte)'0';
                         roundUp = 1;
                         continue;
                     }
@@ -674,32 +672,32 @@ namespace RyuDotNet.Internal
                         {
                             break;
                         }
-                        result[roundIndex] = (char)(c + 1);
+                        result[roundIndex] = (byte)(c + 1);
                         break;
                     }
                 }
             }
-            result[index++] = 'E';
+            result[index++] = (byte)'E';
             if (exp < 0)
             {
-                result[index++] = '-';
+                result[index++] = (byte)'-';
                 exp = -exp;
             }
             else
             {
-                result[index++] = '+';
+                result[index++] = (byte)'+';
             }
 
             if (exp >= 100)
             {
                  int32_t c = exp % 10;
-                memcpy(result + index, DIGIT_TABLE + (uint)(2 * (exp / 10)), 2);
-                result[index + 2] = (char)('0' + c);
+                memcpy(result.Slice(index), DIGIT_TABLE.Slice((2 * (exp / 10)), 2));
+                result[index + 2] = (byte)('0' + c);
                 index += 3;
             }
             else
             {
-                memcpy(result + index, DIGIT_TABLE + (uint)(2 * exp), 2);
+                memcpy(result.Slice(index), DIGIT_TABLE.Slice((2 * exp), 2));
                 index += 2;
             }
 

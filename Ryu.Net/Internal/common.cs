@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using int32_t = System.Int32;
 using uint32_t = System.UInt32;
 using uint64_t = System.UInt64;
@@ -76,41 +75,41 @@ namespace RyuDotNet.Internal
             return (((uint32_t)e) * 732923) >> 20;
         }
 
-        static int copy_special_str(char* result, bool sign, bool exponent, bool mantissa)
+        static int copy_special_str(AlphaSpan result, bool sign, bool exponent, bool mantissa)
         {
             int offset = 0;
 
             if (mantissa)
             {
-                result[offset++] = 'N';
-                result[offset++] = 'a';
-                result[offset++] = 'N';
+                result[offset++] = (byte)'N';
+                result[offset++] = (byte)'a';
+                result[offset++] = (byte)'N';
 
                 return offset;
             }
 
             if (sign)
             {
-                result[offset++] = '-';
+                result[offset++] = (byte)'-';
             }
 
             if (exponent)
             {
-                result[offset++] = 'I';
-                result[offset++] = 'n';
-                result[offset++] = 'f';
-                result[offset++] = 'i';
-                result[offset++] = 'n';
-                result[offset++] = 'i';
-                result[offset++] = 't';
-                result[offset++] = 'y';
+                result[offset++] = (byte)'I';
+                result[offset++] = (byte)'n';
+                result[offset++] = (byte)'f';
+                result[offset++] = (byte)'i';
+                result[offset++] = (byte)'n';
+                result[offset++] = (byte)'i';
+                result[offset++] = (byte)'t';
+                result[offset++] = (byte)'y';
 
                 return offset;
             }
 
-            result[offset++] = '0';
-            result[offset++] = 'E';
-            result[offset++] = '0';
+            result[offset++] = (byte)'0';
+            result[offset++] = (byte)'E';
+            result[offset++] = (byte)'0';
 
             return offset;
         }
@@ -125,18 +124,17 @@ namespace RyuDotNet.Internal
             return *(uint64_t*)&d;
         }
 
-        static void memcpy(char* _Dst, char* _Src, uint32_t _Size)
+        static void memcpy(AlphaSpan _Dst, ReadOnlySpan<byte> _Src)
         {
-            Unsafe.CopyBlock(_Dst, _Src, _Size * sizeof(char));
+            for (int i = 0; i < _Src.Length; ++i) _Dst[i] = _Src[i];
         }
 
-        static void memcpy(char* _Dst, string _Src, uint32_t _Size)
+        static void memcpy(AlphaSpan _Dst, string _Src)
         {
-            fixed (char* chars = _Src)
-                memcpy(_Dst, chars, _Size);
+            for (int i = 0; i < _Src.Length; ++i) _Dst[i] = (byte)_Src[i];
         }
 
-        static void memset(char* _Dst, char _Val, uint32_t _Size )
+        static void memset(AlphaSpan _Dst, byte _Val, uint32_t _Size )
         {
             for (int i = 0; i < _Size; i++)
             {
