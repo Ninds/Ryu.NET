@@ -124,11 +124,6 @@ namespace RyuDotNet.Internal
             return *(uint64_t*)&d;
         }
 
-        static void memcpy(AlphaSpan _Dst, ReadOnlySpan<byte> _Src)
-        {
-            for (int i = 0; i < _Src.Length; ++i) _Dst[i] = _Src[i];
-        }
-
         static void memcpy(AlphaSpan _Dst, string _Src)
         {
             for (int i = 0; i < _Src.Length; ++i) _Dst[i] = (byte)_Src[i];
@@ -140,11 +135,6 @@ namespace RyuDotNet.Internal
             {
                 _Dst[i] = _Val;
             }
-        }
-
-        static int32_t strlen(char* str)
-        {
-            throw new NotSupportedException();
         }
 
         static uint32_t __builtin_clzll(uint64_t value)

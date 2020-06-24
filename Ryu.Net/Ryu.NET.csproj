@@ -10,6 +10,7 @@
   <ItemGroup>
     <Compile Remove="Internal\f2s.cs" />
     <Compile Remove="Internal\f2s_full_table.cs" />
+    <Compile Remove="Internal\floating_decimal_32.cs" />
   </ItemGroup>
 
 
@@ -29,9 +30,5 @@
   </ItemGroup>
 
 
-  <ItemGroup>
-    <None Include="Internal\f2s.cs" />
-    <None Include="Internal\f2s_full_table.cs" />
-  </ItemGroup>
-  
+
 </Project>

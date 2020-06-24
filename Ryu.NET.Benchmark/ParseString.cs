@@ -14,19 +14,20 @@ namespace RyuDotNet.Benchmark
         {
             for (int i = 0; i < SmallTestSet.TestArray.Length; ++i)
             {
-                double x = double.Parse(SmallTestSet.TestArray[i],culture);
-                x = x + 1.0;
+                double x;
+                for (int u = 0; u < 5; ++u) x = double.Parse(SmallTestSet.TestArray[i], culture);
+
             }
         }
 
         [Benchmark]
-        unsafe public void RyuDoubleParse()
+        public void RyuDoubleParse()
         {
             for (int i = 0; i < SmallTestSet.TestArray.Length; ++i)
             {
                 double x;
-                RyuDotNet.Internal.Ryu.s2d_n(SmallTestSet.TestArray[i].AsSpan(), out x);
-                x = x + 1.0;
+                for (int u = 0; u < 5; ++u) RyuDotNet.Internal.Ryu.s2d_n(SmallTestSet.TestArray[i].AsSpan(), out x);
+
             }
         }
     }

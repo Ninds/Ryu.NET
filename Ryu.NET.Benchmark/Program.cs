@@ -10,13 +10,16 @@ namespace RyuDotNet.Benchmark
         {
             try
             {
-                  BenchmarkSwitcher.FromAssembly(Assembly.GetExecutingAssembly()).Run(args);
-                //var debugInstance = new ParseAsciiString();
+                BenchmarkSwitcher.FromAssembly(Assembly.GetExecutingAssembly()).Run(args);
+                var debugInstance = new ParseAsciiString();
                 //debugInstance.GlobalSetup();
                 //debugInstance.CSDoubleParse();
                 //debugInstance.RyuDoubleParse();
+
+                //var debugInstance = new PrintStringAsciii();
+                //debugInstance.RyuDoublePrintAscii();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
             }

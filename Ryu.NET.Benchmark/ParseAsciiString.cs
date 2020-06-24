@@ -20,19 +20,20 @@ namespace RyuDotNet.Benchmark
         {
             for (int i = 0; i < TestArray.Length; ++i)
             {
-                double x = double.Parse(Encoding.ASCII.GetString(TestArray[i]),culture);
-                x = x + 1.0;
+                double x;
+                for (int u = 0; u < 5; ++u) x = double.Parse(Encoding.ASCII.GetString(TestArray[i]), culture);
+
             }
         }
 
         [Benchmark]
-        unsafe public void RyuDoubleParseAscii()
+        public void RyuDoubleParseAscii()
         {
             for (int i = 0; i < TestArray.Length; ++i)
             {
                 double x;
-                RyuDotNet.Internal.Ryu.s2d_n(TestArray[i], out x);
-                x = x + 1.0;
+                for (int u = 0; u < 5; ++u) RyuDotNet.Internal.Ryu.s2d_n(TestArray[i], out x);
+
             }
         }
     }

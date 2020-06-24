@@ -12,6 +12,7 @@ namespace RyuDotNet.Internal
         public AlphaSpan(Span<char> span) { _shift = 1; _span = MemoryMarshal.AsBytes(span); }
         private AlphaSpan(Span<byte> span, int shift) { _shift = shift; _span = span; }
 
+        
         public byte this[int index]
         {
             get
@@ -23,7 +24,9 @@ namespace RyuDotNet.Internal
                 _span[index << _shift] = value;
             }
         }
+       
         public int Length => _span.Length >> _shift;
+
 
         public AlphaSpan Slice(int start)
         {
@@ -58,14 +61,9 @@ namespace RyuDotNet.Internal
         public ReadOnlyAlphaSpan(ReadOnlySpan<char> span) { _shift = 1; _span = MemoryMarshal.AsBytes(span); }
         private ReadOnlyAlphaSpan(ReadOnlySpan<byte> span, int shift) { _shift = shift; _span = span; }
 
-        public byte this[int index]
-        {
-            get
-            {
-                return _span[index << _shift];
-            }
-           
-        }
+        public byte this[int index] => _span[index << _shift];
+            
+
         public int Length => _span.Length >> _shift;
 
         public ReadOnlyAlphaSpan Slice(int start)

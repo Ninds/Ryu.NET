@@ -26,5 +26,12 @@ namespace RyuDotNet.Internal
           (byte)'9',(byte)'0',(byte)'9',(byte)'1',(byte)'9',(byte)'2',(byte)'9',(byte)'3',(byte)'9',(byte)'4',
           (byte)'9',(byte)'5',(byte)'9',(byte)'6',(byte)'9',(byte)'7',(byte)'9',(byte)'8',(byte)'9',(byte)'9'
         };
+        // memcpy(result.Slice((int)(index + olength - i - 1)), DIGIT_TABLE.Slice((int)c0, 2));
+
+        static void Copy2BytesFromDigitTable(AlphaSpan result, long startDest, uint StartSrc)
+        {
+            result[(int)startDest] = DIGIT_TABLE[(int)StartSrc];
+            result[(int)startDest +1] = DIGIT_TABLE[(int)StartSrc + 1];
+        }
     }
 }

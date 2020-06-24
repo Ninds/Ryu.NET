@@ -14,26 +14,16 @@ namespace RyuDotNet.Internal
     {
         const int DOUBLE_EXPONENT_BIAS = 1023;
 
-
         static uint32_t floor_log2(uint64_t value)
         {
             return 63 - __builtin_clzll(value);
         }
 
-
-
-        // The max function is already defined on Windows.
-        static int32_t max32(int32_t a, int32_t b)
-        {
-            return a < b ? b : a;
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static double int64Bits2Double(uint64_t bits)
         {
-            Span<byte> asBytes = stackalloc byte[8];
-            MemoryMarshal.Write(asBytes, ref bits);
-            return MemoryMarshal.Read<double>(asBytes);
+            return *(double*)&bits;
+        
         }
 
         internal static Status s2d_n_inner(ReadOnlyAlphaSpan buffer, out double result)
@@ -186,7 +176,7 @@ namespace RyuDotNet.Internal
 
 
             // Compute the final IEEE exponent.
-            uint32_t ieee_e2 = (uint32_t)max32(0, (int32_t)(e2 + DOUBLE_EXPONENT_BIAS + floor_log2(m2)));
+            uint32_t ieee_e2 = (uint32_t)Math.Max(0, (int32_t)(e2 + DOUBLE_EXPONENT_BIAS + floor_log2(m2)));
 
             if (ieee_e2 > 0x7fe)
             {

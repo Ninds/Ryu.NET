@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Xunit;
 
 namespace RyuDotNet.UnitTests
@@ -12,7 +13,7 @@ namespace RyuDotNet.UnitTests
     unsafe public class Test_d2s
     {
 
-        [Theory]
+        //[Theory]
         [InlineData(1.0)]
         [InlineData(-1.0)]
         [InlineData(0.0)]
@@ -37,7 +38,7 @@ namespace RyuDotNet.UnitTests
         }
 
 
-        [Theory]
+        //[Theory]
         [InlineData(1.0)]
         [InlineData(-1.0)]
         [InlineData(0.0)]
@@ -61,7 +62,7 @@ namespace RyuDotNet.UnitTests
 
         }
 
-        [Theory]
+        //[Theory]
         [InlineData(1.0)]
         [InlineData(-1.0)]
         [InlineData(0.0)]
@@ -72,8 +73,49 @@ namespace RyuDotNet.UnitTests
         {
             Span<char> readOnlySpan = stackalloc char[100];
             int index = 0;
-            index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(f, 19, new AlphaSpan(readOnlySpan));
+            index = RyuDotNet.Internal.Ryu.d2s_buffered_n(f, new AlphaSpan(readOnlySpan));
             var strString = new string(readOnlySpan.Slice(0, index));
+            Assert.Equal(f.ToString("E19"), double.Parse(strString).ToString("E19"));
+
+        }
+
+
+        [Theory]
+        [InlineData(1.0)]
+        [InlineData(-1.0)]
+        [InlineData(0.0)]
+        [InlineData(-0.000000000000001E-100)]
+        [InlineData(5737722933969577e-231)]
+        [ClassData(typeof(D2SSmallDataGenerator))]
+        public void TestWithSmall_d2exp_buffered_n_ascii(double f)
+        {
+            Span<byte> readOnlySpan = stackalloc byte[100];
+            int index = 0;
+
+            index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(f, 19, new AlphaSpan(readOnlySpan));
+            var strString = Encoding.ASCII.GetString(readOnlySpan.Slice(0, index));
+            var parts = strString.Split('E');
+            var expInt = int.Parse(parts[1]);
+            var exp = expInt.ToString("000");
+            if (expInt >= 0) exp = "+" + exp;
+            strString = parts[0] + 'E' + exp;
+            Assert.Equal(f.ToString("E19"), strString);
+
+        }
+
+        [Theory]
+        [InlineData(1.0)]
+        [InlineData(-1.0)]
+        [InlineData(0.0)]
+        [InlineData(-0.000000000000001E-100)]
+        [InlineData(5737722933969577e-231)]
+        [ClassData(typeof(D2SSmallDataGenerator))]
+        public void TestWithSmall_d2s_buffered_n_ascii(double f)
+        {
+            Span<byte> readOnlySpan = stackalloc byte[100];
+            int index = 0;
+            index = RyuDotNet.Internal.Ryu.d2s_buffered_n(f, new AlphaSpan(readOnlySpan));
+            var strString = Encoding.ASCII.GetString(readOnlySpan.Slice(0, index));
             Assert.Equal(f.ToString("E19"), double.Parse(strString).ToString("E19"));
 
         }

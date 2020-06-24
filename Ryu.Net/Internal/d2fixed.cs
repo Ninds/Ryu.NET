@@ -72,21 +72,27 @@ namespace RyuDotNet.Internal
                 digits /= 10000;
                 uint32_t c0 = (c % 100) << 1;
                 uint32_t c1 = (c / 100) << 1;
-                memcpy(result.Slice((int)( olength - i - 2)), DIGIT_TABLE.Slice((int)c0, 2));
-                memcpy(result.Slice((int)( olength - i - 4)), DIGIT_TABLE.Slice((int)c1, 2));
+               // memcpy(result.Slice((int)( olength - i - 2)), DIGIT_TABLE.Slice((int)c0, 2));
+               // memcpy(result.Slice((int)( olength - i - 4)), DIGIT_TABLE.Slice((int)c1, 2));
+
+                Copy2BytesFromDigitTable(result, olength - i - 2, c0);
+                Copy2BytesFromDigitTable(result, olength - i - 4, c1);
+
                 i += 4;
             }
             if (digits >= 100)
             {
                 uint32_t c = (digits % 100) << 1;
                 digits /= 100;
-                memcpy(result.Slice((int)(olength - i - 2)), DIGIT_TABLE.Slice((int)c, 2));
+                //memcpy(result.Slice((int)(olength - i - 4)), DIGIT_TABLE.Slice((int)c, 2));
+                Copy2BytesFromDigitTable(result, olength - i - 4, c);
                 i += 2;
             }
             if (digits >= 10)
             {
                 uint32_t c = digits << 1;
-                memcpy(result.Slice((int)(olength - i - 2)), DIGIT_TABLE.Slice((int)c, 2));
+                //memcpy(result.Slice((int)(olength - i - 2)), DIGIT_TABLE.Slice((int)c, 2));
+                Copy2BytesFromDigitTable(result, olength - i - 2, c);
             }
             else
             {
@@ -99,23 +105,25 @@ namespace RyuDotNet.Internal
             uint32_t i = 0;
             while (digits >= 10000)
             {
-#if __clang__ // https://bugs.llvm.org/show_bug.cgi?id=38217
-         uint32_t c = digits - 10000 * (digits / 10000);
-#else
+
                 uint32_t c = digits % 10000;
-#endif
                 digits /= 10000;
                  uint32_t c0 = (c % 100) << 1;
                  uint32_t c1 = (c / 100) << 1;
-                memcpy(result.Slice((int)(olength + 1 - i - 2)), DIGIT_TABLE.Slice((int)c0, 2));
-                memcpy(result.Slice((int)(olength + 1 - i - 4)), DIGIT_TABLE.Slice((int)c1, 2));
+                //memcpy(result.Slice((int)(olength + 1 - i - 2)), DIGIT_TABLE.Slice((int)c0, 2));
+                //memcpy(result.Slice((int)(olength + 1 - i - 4)), DIGIT_TABLE.Slice((int)c1, 2));
+
+                Copy2BytesFromDigitTable(result, olength + 1 - i - 2, c0);
+                Copy2BytesFromDigitTable(result, olength + 1 - i - 4, c1);
+
                 i += 4;
             }
             if (digits >= 100)
             {
                 uint32_t c = (digits % 100) << 1;
                 digits /= 100;
-                memcpy(result.Slice((int)(olength + 1 - i - 2)), DIGIT_TABLE.Slice((int)c, 2));
+                //memcpy(result.Slice((int)(olength + 1 - i - 2)), DIGIT_TABLE.Slice((int)c, 2));
+                Copy2BytesFromDigitTable(result, olength + 1 - i - 2, c);
                 i += 2;
             }
             if (digits >= 10)
@@ -139,7 +147,8 @@ namespace RyuDotNet.Internal
             {
                 uint32_t c = (digits % 100) << 1;
                 digits /= 100;
-                memcpy(result.Slice((int)(count - i - 2)), DIGIT_TABLE.Slice((int)c, 2));
+                //memcpy(result.Slice((int)(count - i - 2)), DIGIT_TABLE.Slice((int)c, 2));
+                Copy2BytesFromDigitTable(result, count - i - 2, c);
             }
             if (i < count)
             {
@@ -158,16 +167,16 @@ namespace RyuDotNet.Internal
 
             for (uint32_t i = 0; i < 5; i += 4)
             {
-#if __clang__ // https://bugs.llvm.org/show_bug.cgi?id=38217
-         uint32_t c = digits - 10000 * (digits / 10000);
-#else
+
                 uint32_t c = digits % 10000;
-#endif
                 digits /= 10000;
-                 uint32_t c0 = (c % 100) << 1;
-                 uint32_t c1 = (c / 100) << 1;
-                memcpy(result.Slice((int)(7 - i)), DIGIT_TABLE.Slice((int)c0, 2));
-                memcpy(result.Slice((int)(5 - i)), DIGIT_TABLE.Slice((int)c1, 2));
+                uint32_t c0 = (c % 100) << 1;
+                uint32_t c1 = (c / 100) << 1;
+                //memcpy(result.Slice((int)(7 - i)), DIGIT_TABLE.Slice((int)c0, 2));
+                //memcpy(result.Slice((int)(5 - i)), DIGIT_TABLE.Slice((int)c1, 2));
+
+                Copy2BytesFromDigitTable(result, 7 - i, c0);
+                Copy2BytesFromDigitTable(result, 5 - i, c1);
             }
             result[0] = (byte)('0' + digits);
         }
@@ -190,20 +199,7 @@ namespace RyuDotNet.Internal
 
         static int copy_special_str_printf(AlphaSpan result, bool sign, uint64_t mantissa)
         {
-#if _MSC_VER
-  // TODO: Check that -nan is expected output on Windows.
-  if (sign) {
-    result[0] = '-';
-  }
-  if (mantissa != 0) {
-    if (mantissa < (1ull << (DOUBLE_MANTISSA_BITS - 1))) {
-      memcpy(result.Slice((int)(sign, "nan(snan)", 9);
-      return sign + 9;
-    }
-    memcpy(result.Slice((int)(sign, "nan", 3);
-    return sign + 3;
-  }
-#else
+
             if (mantissa != 0)
             {
                 memcpy(result, "nan");
@@ -213,7 +209,6 @@ namespace RyuDotNet.Internal
             {
                 result[0] = (byte)'-';
             }
-#endif
             memcpy(result.Slice((int)((sign ? 1 : 0))), "Infinity");
             return (sign ? 1 : 0) + 8;
         }
@@ -244,8 +239,7 @@ namespace RyuDotNet.Internal
                 if (precision > 0)
                 {
                     result[index2++] = (byte)'.';
-                    //memset(result + index2, '0', precision);
-                    memset(result.Slice(0), (byte)'0', precision);
+                    memset(result, (byte)'0', precision);
                     index2 += (int)precision;
                 }
                 return index2;
@@ -403,7 +397,7 @@ namespace RyuDotNet.Internal
                             dotIndex = roundIndex;
                             continue;
                         }
-                        else if (c == '9')
+                        else if (c == (byte)'9')
                         {
                             result[roundIndex] = (byte)'0';
                             roundUp = 1;
@@ -691,13 +685,16 @@ namespace RyuDotNet.Internal
             if (exp >= 100)
             {
                  int32_t c = exp % 10;
-                memcpy(result.Slice(index), DIGIT_TABLE.Slice((2 * (exp / 10)), 2));
+                //memcpy(result.Slice(index), DIGIT_TABLE.Slice((2 * (exp / 10)), 2));
+                Copy2BytesFromDigitTable(result, index , (uint)(2 * (exp / 10)));
+
                 result[index + 2] = (byte)('0' + c);
                 index += 3;
             }
             else
             {
-                memcpy(result.Slice(index), DIGIT_TABLE.Slice((2 * exp), 2));
+                //memcpy(result.Slice(index), DIGIT_TABLE.Slice((2 * exp), 2));
+                Copy2BytesFromDigitTable(result, index, (uint)(2 * (exp)));
                 index += 2;
             }
 

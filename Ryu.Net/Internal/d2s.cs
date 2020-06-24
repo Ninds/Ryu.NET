@@ -286,10 +286,17 @@ namespace RyuDotNet.Internal
                 uint32_t c1 = (c / 100) << 1;
                 uint32_t d0 = (d % 100) << 1;
                 uint32_t d1 = (d / 100) << 1;
-                memcpy(result.Slice((int)(index + olength - i - 1)), DIGIT_TABLE.Slice((int)c0, 2));
-                memcpy(result.Slice((int)(index + olength - i - 3)), DIGIT_TABLE.Slice((int)c1, 2));
-                memcpy(result.Slice((int)(index + olength - i - 5)), DIGIT_TABLE.Slice((int)d0, 2));
-                memcpy(result.Slice((int)(index + olength - i - 7)), DIGIT_TABLE.Slice((int)d1, 2));
+                //memcpy(result.Slice((int)(index + olength - i - 1)), DIGIT_TABLE.Slice((int)c0, 2));
+                //memcpy(result.Slice((int)(index + olength - i - 3)), DIGIT_TABLE.Slice((int)c1, 2));
+                //memcpy(result.Slice((int)(index + olength - i - 5)), DIGIT_TABLE.Slice((int)d0, 2));
+                //memcpy(result.Slice((int)(index + olength - i - 7)), DIGIT_TABLE.Slice((int)d1, 2));
+
+                long oiIndex = index + olength - i;
+                Copy2BytesFromDigitTable(result, oiIndex - 1, c0);
+                Copy2BytesFromDigitTable(result, oiIndex - 3, c1);
+                Copy2BytesFromDigitTable(result, oiIndex - 5, d0);
+                Copy2BytesFromDigitTable(result, oiIndex - 7, d1);
+
                 i += 8;
             }
             uint32_t output2 = (uint32_t)output;
@@ -301,15 +308,21 @@ namespace RyuDotNet.Internal
                 output2 /= 10000;
                 uint32_t c0 = (c % 100) << 1;
                 uint32_t c1 = (c / 100) << 1;
-                memcpy(result.Slice((int)(index + olength - i - 1)), DIGIT_TABLE.Slice((int)c0, 2));
-                memcpy(result.Slice((int)(index + olength - i - 3)), DIGIT_TABLE.Slice((int)c1, 2));
+                //memcpy(result.Slice((int)(index + olength - i - 1)), DIGIT_TABLE.Slice((int)c0, 2));
+                //memcpy(result.Slice((int)(index + olength - i - 3)), DIGIT_TABLE.Slice((int)c1, 2));
+
+                long oiIndex = index + olength - i;
+                Copy2BytesFromDigitTable(result, oiIndex - 1, c0);
+                Copy2BytesFromDigitTable(result, oiIndex - 3, c1);
+
                 i += 4;
             }
             if (output2 >= 100)
             {
                 uint32_t c = (output2 % 100) << 1;
                 output2 /= 100;
-                memcpy(result.Slice((int)(index + olength - i - 1)), DIGIT_TABLE.Slice((int)c, 2));
+                //memcpy(result.Slice((int)(index + olength - i - 1)), DIGIT_TABLE.Slice((int)c, 2));
+                Copy2BytesFromDigitTable(result, index + olength - i - 1, c);
                 i += 2;
             }
             if (output2 >= 10)
@@ -347,13 +360,16 @@ namespace RyuDotNet.Internal
             if (exp >= 100)
             {
                 int32_t c = exp % 10;
-                memcpy(result.Slice((int)(index)), DIGIT_TABLE.Slice((int)(2 * (uint)(exp / 10)), 2));
+               // memcpy(result.Slice((int)(index)), DIGIT_TABLE.Slice((int)(2 * (uint)(exp / 10)), 2));
+                Copy2BytesFromDigitTable(result, index , 2 * (uint)(exp / 10));
+
                 result[index + 2] = (byte)('0' + c);
                 index += 3;
             }
             else if (exp >= 10)
             {
-                memcpy(result.Slice(index), DIGIT_TABLE.Slice((int)(2 * (uint)exp), 2));
+                //memcpy(result.Slice(index), DIGIT_TABLE.Slice((int)(2 * (uint)exp), 2));
+                Copy2BytesFromDigitTable(result, index, 2 * (uint)(exp));
                 index += 2;
             }
             else
