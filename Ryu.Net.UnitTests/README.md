@@ -2,10 +2,10 @@
 
                                  
 `Test Run Failed.`  
-`Total tests: 3299353`                
-`     Passed: 3299353`             
- `Total time:  16.9788 Minutes`
+`Total tests: 3945490`                
+`     Passed: 3945490`             
+ `Total time:  1.0336 Hours`
 
- The failed tests can be found in FAIL.txt
+
     
                                  

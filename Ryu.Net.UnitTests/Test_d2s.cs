@@ -3,7 +3,6 @@ using RyuDotNet.UnitTests.s2d_data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using Xunit;
@@ -13,7 +12,7 @@ namespace RyuDotNet.UnitTests
     unsafe public class Test_d2s
     {
 
-        //[Theory]
+        [Theory]
         [InlineData(1.0)]
         [InlineData(-1.0)]
         [InlineData(0.0)]
@@ -38,7 +37,25 @@ namespace RyuDotNet.UnitTests
         }
 
 
-        //[Theory]
+        [Theory]
+        [InlineData(1.0)]
+        [InlineData(-1.0)]
+        [InlineData(0.0)]
+        [InlineData(-0.000000000000001E-100)]
+        [InlineData(5737722933969577e-231)]
+        [ClassData(typeof(D2SDataGenerator))]
+        public void Test_d2s_buffered_n(double f)
+        {
+            Span<char> readOnlySpan = stackalloc char[100];
+            int index = 0;
+            index = RyuDotNet.Internal.Ryu.d2s_buffered_n(f, new AlphaSpan(readOnlySpan));
+            var strString = new string(readOnlySpan.Slice(0, index));
+            Assert.Equal(f.ToString("E19"), double.Parse(strString).ToString("E19"));
+
+        }
+
+
+        [Theory]
         [InlineData(1.0)]
         [InlineData(-1.0)]
         [InlineData(0.0)]
@@ -62,7 +79,7 @@ namespace RyuDotNet.UnitTests
 
         }
 
-        //[Theory]
+        [Theory]
         [InlineData(1.0)]
         [InlineData(-1.0)]
         [InlineData(0.0)]

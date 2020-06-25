@@ -6,7 +6,7 @@ namespace RyuDotNet.UnitTests
 {
     public class TestPublicApi
     {
-        //[Theory]
+        [Theory]
         [ClassData(typeof(SmallDataGenerator))]
         public void Test_TryParse_char(string str)
         {
@@ -18,7 +18,7 @@ namespace RyuDotNet.UnitTests
         }
 
 
-       // [Theory]
+        [Theory]
         [ClassData(typeof(SmallDataGenerator))]
         public void Test_TryParse_string(string str)
         {
@@ -30,7 +30,7 @@ namespace RyuDotNet.UnitTests
         }
 
 
-       // [Theory]
+        [Theory]
         [ClassData(typeof(SmallAsciiDataGenerator))]
         public void Test_TryParse_byte(byte[] byteArray, string str)
         {
@@ -42,7 +42,7 @@ namespace RyuDotNet.UnitTests
         }
 
 
-        //[Theory]
+        [Theory]
         [ClassData(typeof(SmallDataGenerator))]
         public void Test_Parse_char(string str)
         {
@@ -50,7 +50,7 @@ namespace RyuDotNet.UnitTests
             Assert.Equal(ryuVale.ToString("G18"), double.Parse(str).ToString("G18"));
         }
 
-        //[Theory]
+        [Theory]
         [ClassData(typeof(SmallDataGenerator))]
         public void Test_Parse_string(string str)
         {
@@ -58,7 +58,7 @@ namespace RyuDotNet.UnitTests
             Assert.Equal(ryuVale.ToString("G18"), double.Parse(str).ToString("G18"));
         }
 
-        //[Theory]
+        [Theory]
         [ClassData(typeof(SmallAsciiDataGenerator))]
         public void Test_Parse_byte(byte[] byteArray, string str)
         {
