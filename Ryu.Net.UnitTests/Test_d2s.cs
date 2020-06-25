@@ -12,7 +12,7 @@ namespace RyuDotNet.UnitTests
     unsafe public class Test_d2s
     {
 
-        //[Theory]
+        [Theory]
         [InlineData(1.0)]
         [InlineData(-1.0)]
         [InlineData(0.0)]
@@ -37,7 +37,7 @@ namespace RyuDotNet.UnitTests
         }
 
 
-        //[Theory]
+        [Theory]
         [InlineData(1.0)]
         [InlineData(-1.0)]
         [InlineData(0.0)]

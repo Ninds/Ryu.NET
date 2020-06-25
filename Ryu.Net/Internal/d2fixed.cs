@@ -705,7 +705,7 @@ namespace RyuDotNet.Internal
 
 
 
-        internal static int d2exp_buffered_n(double d, uint32_t precision, Span<char> result)
+        internal static int d2exp_buffered_n(double d, uint precision, Span<char> result)
         {
             var byteSpan = MemoryMarshal.AsBytes(result);
             var res = d2exp_buffered_n(d, precision, byteSpan);

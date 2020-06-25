@@ -20,7 +20,7 @@ namespace RyuDotNet.UnitTests
 
         // Probably not best to run these tests through VS's test runner
         // Run them ftom the command line  'dotnet test RyuCsharp.UnitTests.dll'
-        //[Theory]
+        [Theory]
         [InlineData("1.2999999999999999E+154", 1.2999999999999999E+154)]
         [ClassData(typeof(DataGenerator))]
         public void TestWithRemysIteratoutput(string str, double val)

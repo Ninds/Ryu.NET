@@ -1,5 +1,6 @@
 ﻿using RyuDotNet.Internal;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace RyuDotNet
 {
@@ -35,5 +36,47 @@ namespace RyuDotNet
             throw new FormatException(status.ToString());
         }
 
+        unsafe public static string ToStringRyu(this double d)
+        {
+            Span<char> charSpan = stackalloc char[40];
+            int index = RyuDotNet.Internal.Ryu.d2s_buffered_n(d, charSpan);
+            fixed (char* data = &charSpan.GetPinnableReference())
+            {
+                return new string(data, 0, index);
+            }
+        }
+        unsafe public static string ToStringRyu(this double d,int n)
+        {
+            Span<char> charSpan = stackalloc char[40];
+            int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d,(uint)n, charSpan);
+            fixed (char* data = &charSpan.GetPinnableReference())
+            {
+                return new string(data, 0, index);
+            }
+        }
+
+        public static Span<byte> WriteTo(this double d, Span<byte> buffer)
+        {
+            int index = RyuDotNet.Internal.Ryu.d2s_buffered_n(d, buffer);
+            return buffer.Slice(0, index);
+        }
+
+        public static Span<char> WriteTo(this double d, Span<char> buffer)
+        {
+            int index = RyuDotNet.Internal.Ryu.d2s_buffered_n(d, buffer);
+            return buffer.Slice(0, index);
+        }
+
+        public static Span<byte> WriteTo(this double d, int n,  Span<byte> buffer)
+        {
+            int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d,(uint)n, buffer);
+            return buffer.Slice(0, index);
+        }
+
+        public static Span<char> WriteTo(this double d, int n, Span<char> buffer)
+        {
+            int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d, (uint)n,buffer);
+            return buffer.Slice(0, index);
+        }
     }
 }
