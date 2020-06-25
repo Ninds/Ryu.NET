@@ -12,7 +12,7 @@ namespace RyuDotNet.Benchmark
                         WithPlatform(Platform.X64).
                         WithRuntime(CoreRuntime.Core31).
                         WithJit(Jit.RyuJit).
-                        WithIterationCount(5000).
+                        WithIterationCount(1000).
                         WithLaunchCount(1).
                         WithWarmupCount(10).
                         WithInvocationCount(16)
@@ -21,7 +21,7 @@ namespace RyuDotNet.Benchmark
                       WithPlatform(Platform.X64).
                       WithRuntime(CoreRuntime.Core50).
                       WithJit(Jit.RyuJit).
-                      WithIterationCount(5000).
+                      WithIterationCount(1000).
                       WithLaunchCount(1).
                       WithWarmupCount(10).
                       WithInvocationCount(16)

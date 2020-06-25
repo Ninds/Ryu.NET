@@ -1,4 +1,6 @@
-﻿using int32_t = System.Int32;
+﻿using System;
+using System.Runtime.InteropServices;
+using int32_t = System.Int32;
 using uint32_t = System.UInt32;
 using uint64_t = System.UInt64;
 
@@ -61,7 +63,7 @@ namespace RyuDotNet.Internal
             return uint128_mod1e9(shiftedhigh, shiftedlow);
         }
 
-        static void append_n_digits(uint32_t olength, uint32_t digits, AlphaSpan result)
+        static void append_n_digits(uint32_t olength, uint32_t digits, Span<byte> result)
         {
 
             uint32_t i = 0;
@@ -100,7 +102,7 @@ namespace RyuDotNet.Internal
             }
         }
 
-        static void append_d_digits(uint32_t olength, uint32_t digits, AlphaSpan result)
+        static void append_d_digits(uint32_t olength, uint32_t digits, Span<byte> result)
         {
             uint32_t i = 0;
             while (digits >= 10000)
@@ -140,7 +142,7 @@ namespace RyuDotNet.Internal
             }
         }
 
-        static void append_c_digits(uint32_t count, uint32_t digits, AlphaSpan result)
+        static void append_c_digits(uint32_t count, uint32_t digits, Span<byte> result)
         {
             uint32_t i = 0;
             for (; i < count - 1; i += 2)
@@ -157,7 +159,7 @@ namespace RyuDotNet.Internal
             }
         }
 
-        static void append_nine_digits(uint32_t digits, AlphaSpan result)
+        static void append_nine_digits(uint32_t digits, Span<byte> result)
         {
             if (digits == 0)
             {
@@ -197,7 +199,7 @@ namespace RyuDotNet.Internal
             return (log10Pow2(16 * (int32_t)idx) + 1 + 16 + 8) / 9;
         }
 
-        static int copy_special_str_printf(AlphaSpan result, bool sign, uint64_t mantissa)
+        static int copy_special_str_printf(Span<byte> result, bool sign, uint64_t mantissa)
         {
 
             if (mantissa != 0)
@@ -213,7 +215,7 @@ namespace RyuDotNet.Internal
             return (sign ? 1 : 0) + 8;
         }
 
-        internal static int d2fixed_buffered_n(double d, uint32_t precision, AlphaSpan result)
+        internal static int d2fixed_buffered_n(double d, uint32_t precision, Span<byte> result)
         {
             uint64_t bits = double_to_bits(d);
 
@@ -423,7 +425,7 @@ namespace RyuDotNet.Internal
             return index;
         }
 
-        internal static int d2exp_buffered_n(double d, uint32_t precision, AlphaSpan result)
+        internal static int d2exp_buffered_n(double d, uint32_t precision, Span<byte> result)
         {
             uint64_t bits = double_to_bits(d);
 
@@ -699,6 +701,17 @@ namespace RyuDotNet.Internal
             }
 
             return index;
+        }
+
+
+
+        internal static int d2exp_buffered_n(double d, uint32_t precision, Span<char> result)
+        {
+            var byteSpan = MemoryMarshal.AsBytes(result);
+            var res = d2exp_buffered_n(d, precision, byteSpan);
+
+            for (int i = res - 1;  i >= 0; --i) result[i] = (char)byteSpan[i];
+            return res;
         }
 
     }

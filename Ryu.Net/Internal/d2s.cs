@@ -1,4 +1,6 @@
-﻿using int32_t = System.Int32;
+﻿using System;
+using System.Runtime.InteropServices;
+using int32_t = System.Int32;
 using uint32_t = System.UInt32;
 using uint64_t = System.UInt64;
 using uint8_t = System.Byte;
@@ -246,7 +248,7 @@ namespace RyuDotNet.Internal
             return fd;
         }
 
-        internal static int to_chars(floating_decimal_64 v, bool sign, AlphaSpan result)
+        internal static int to_chars(floating_decimal_64 v, bool sign, Span<byte> result)
         {
             // Step 5: Print the decimal representation.
             int index = 0;
@@ -415,7 +417,7 @@ namespace RyuDotNet.Internal
             return true;
         }
 
-        internal static int d2s_buffered_n(double f, AlphaSpan result)
+        internal static int d2s_buffered_n(double f, Span<byte> result)
         {
             // Step 1: Decode the floating-point number, and unify normalized and subnormal cases.
             uint64_t bits = double_to_bits(f);
@@ -460,6 +462,16 @@ namespace RyuDotNet.Internal
             return to_chars(v, ieeeSign, result);
         }
 
- 
+
+        internal static int d2s_buffered_n(double f, Span<char> result)
+        {
+            var byteSpan = MemoryMarshal.AsBytes(result);
+            var res = d2s_buffered_n(f,byteSpan);
+            for (int i = res - 1; i >= 0; --i) result[i] = (char)byteSpan[i];
+            return res;
+        }
+
+
+
     }
 }

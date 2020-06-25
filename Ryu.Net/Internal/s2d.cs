@@ -26,7 +26,7 @@ namespace RyuDotNet.Internal
         
         }
 
-        internal static Status s2d_n_inner(ReadOnlyAlphaSpan buffer, out double result)
+        internal static Status s2d_n(ReadOnlySpan<byte> buffer, out double result)
         {
             result = 0;
             var len = buffer.Length;
@@ -51,7 +51,7 @@ namespace RyuDotNet.Internal
             for (; i < len; i++)
             {
                 byte c = buffer[i];
-                if (c == '.')
+                if (c == (byte)'.')
                 {
                     if (dotIndex != len)
                     {
@@ -217,13 +217,12 @@ namespace RyuDotNet.Internal
 
         internal static Status s2d_n(ReadOnlySpan<char> buffer, out double result)
         {
-            return s2d_n_inner(new ReadOnlyAlphaSpan(buffer),out result);
+            Span<byte> byteBuffer = stackalloc byte[buffer.Length];
+            for (int i = 0; i < buffer.Length; ++i) byteBuffer[i] = (byte)buffer[i];
+
+            return s2d_n(byteBuffer, out result);
         }
 
-        internal static Status s2d_n(ReadOnlySpan<byte> buffer, out double result)
-        {
-            return s2d_n_inner(new ReadOnlyAlphaSpan(buffer), out result);
-        }
-
+      
     }
 }

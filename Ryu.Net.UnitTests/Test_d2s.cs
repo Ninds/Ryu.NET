@@ -12,7 +12,7 @@ namespace RyuDotNet.UnitTests
     unsafe public class Test_d2s
     {
 
-        [Theory]
+        //[Theory]
         [InlineData(1.0)]
         [InlineData(-1.0)]
         [InlineData(0.0)]
@@ -24,7 +24,7 @@ namespace RyuDotNet.UnitTests
             Span<char> readOnlySpan = stackalloc char[100];
             int index = 0;
 
-            index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(f, 19, new AlphaSpan(readOnlySpan));
+            index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(f, 19, readOnlySpan);
 
             var strString = new string(readOnlySpan.Slice(0, index));
             var parts = strString.Split('E');
@@ -37,7 +37,7 @@ namespace RyuDotNet.UnitTests
         }
 
 
-        [Theory]
+        //[Theory]
         [InlineData(1.0)]
         [InlineData(-1.0)]
         [InlineData(0.0)]
@@ -48,7 +48,7 @@ namespace RyuDotNet.UnitTests
         {
             Span<char> readOnlySpan = stackalloc char[100];
             int index = 0;
-            index = RyuDotNet.Internal.Ryu.d2s_buffered_n(f, new AlphaSpan(readOnlySpan));
+            index = RyuDotNet.Internal.Ryu.d2s_buffered_n(f, readOnlySpan);
             var strString = new string(readOnlySpan.Slice(0, index));
             Assert.Equal(f.ToString("E19"), double.Parse(strString).ToString("E19"));
 
@@ -67,7 +67,7 @@ namespace RyuDotNet.UnitTests
             Span<char> readOnlySpan = stackalloc char[100];
             int index = 0;
 
-            index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(f, 19, new AlphaSpan(readOnlySpan));
+            index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(f, 19, readOnlySpan);
 
             var strString = new string(readOnlySpan.Slice(0, index));
             var parts = strString.Split('E');
@@ -90,7 +90,7 @@ namespace RyuDotNet.UnitTests
         {
             Span<char> readOnlySpan = stackalloc char[100];
             int index = 0;
-            index = RyuDotNet.Internal.Ryu.d2s_buffered_n(f, new AlphaSpan(readOnlySpan));
+            index = RyuDotNet.Internal.Ryu.d2s_buffered_n(f, readOnlySpan);
             var strString = new string(readOnlySpan.Slice(0, index));
             Assert.Equal(f.ToString("E19"), double.Parse(strString).ToString("E19"));
 
@@ -109,7 +109,7 @@ namespace RyuDotNet.UnitTests
             Span<byte> readOnlySpan = stackalloc byte[100];
             int index = 0;
 
-            index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(f, 19, new AlphaSpan(readOnlySpan));
+            index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(f, 19, readOnlySpan);
             var strString = Encoding.ASCII.GetString(readOnlySpan.Slice(0, index));
             var parts = strString.Split('E');
             var expInt = int.Parse(parts[1]);
@@ -131,7 +131,7 @@ namespace RyuDotNet.UnitTests
         {
             Span<byte> readOnlySpan = stackalloc byte[100];
             int index = 0;
-            index = RyuDotNet.Internal.Ryu.d2s_buffered_n(f, new AlphaSpan(readOnlySpan));
+            index = RyuDotNet.Internal.Ryu.d2s_buffered_n(f, readOnlySpan);
             var strString = Encoding.ASCII.GetString(readOnlySpan.Slice(0, index));
             Assert.Equal(f.ToString("E19"), double.Parse(strString).ToString("E19"));
 

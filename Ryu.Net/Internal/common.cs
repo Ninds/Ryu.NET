@@ -75,7 +75,7 @@ namespace RyuDotNet.Internal
             return (((uint32_t)e) * 732923) >> 20;
         }
 
-        static int copy_special_str(AlphaSpan result, bool sign, bool exponent, bool mantissa)
+        static int copy_special_str(Span<byte> result, bool sign, bool exponent, bool mantissa)
         {
             int offset = 0;
 
@@ -124,12 +124,12 @@ namespace RyuDotNet.Internal
             return *(uint64_t*)&d;
         }
 
-        static void memcpy(AlphaSpan _Dst, string _Src)
+        static void memcpy(Span<byte> _Dst, string _Src)
         {
             for (int i = 0; i < _Src.Length; ++i) _Dst[i] = (byte)_Src[i];
         }
 
-        static void memset(AlphaSpan _Dst, int start,byte _Val, uint32_t _Size )
+        static void memset(Span<byte> _Dst, int start,byte _Val, uint32_t _Size )
         {
             for (int i = 0; i < _Size; i++)
             {

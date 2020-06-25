@@ -13,9 +13,10 @@ namespace RyuDotNet.Benchmark
         [Benchmark(Baseline = true)]
         public void CSDoublePrint()
         {
+            string x;
             for (int i = 0; i < SmallD2STestSet.TestArray.Length; ++i)
             {
-                string x;
+
                 for (int u = 0; u < 5; ++u) x = SmallD2STestSet.TestArray[i].ToString();
             }
         }
@@ -23,13 +24,13 @@ namespace RyuDotNet.Benchmark
         [Benchmark]
         public void RyuDoublePrint()
         {
-            var sp = span.AsSpan();
+            string x;
             for (int i = 0; i < SmallD2STestSet.TestArray.Length; ++i)
             {
                 for (int u = 0; u < 5; ++u)
                 {
-                    int n = RyuDotNet.Internal.Ryu.d2s_buffered_n(SmallD2STestSet.TestArray[i], new Internal.AlphaSpan(span));
-                    // var x = new string(sp.Slice(0, n));
+                    int n = RyuDotNet.Internal.Ryu.d2s_buffered_n(SmallD2STestSet.TestArray[i],span);
+                    x = new string(span,0,n);
 
                 }
             }

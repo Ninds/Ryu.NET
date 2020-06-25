@@ -32,7 +32,7 @@ namespace RyuDotNet.Benchmark
                 for (int u = 0; u < 5; ++u)
                 {
 
-                    int n =  RyuDotNet.Internal.Ryu.d2s_buffered_n(SmallD2STestSet.TestArray[i], new Internal.AlphaSpan(span));
+                    int n =  RyuDotNet.Internal.Ryu.d2s_buffered_n(SmallD2STestSet.TestArray[i], span);
                     int m = n * 2;
                 }
             }
