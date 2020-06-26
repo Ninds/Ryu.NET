@@ -6,6 +6,7 @@ namespace RyuDotNet
 {
     public static class Ryu
     {
+       
         public static bool TryParse(ReadOnlySpan<char> span, out double res) =>
             RyuDotNet.Internal.Ryu.s2d_n(span, out res) == RyuDotNet.Internal.Status.SUCCESS;
 
@@ -17,7 +18,7 @@ namespace RyuDotNet
 
         public static double Parse(ReadOnlySpan<char> span)
         {
-            double res = 0.0;
+            double res;
             Status status;
             if ((status = RyuDotNet.Internal.Ryu.s2d_n(span, out res)) == RyuDotNet.Internal.Status.SUCCESS) return res;
             throw new FormatException(status.ToString());
@@ -45,10 +46,10 @@ namespace RyuDotNet
                 return new string(data, 0, index);
             }
         }
-        unsafe public static string ToStringRyu(this double d,int n)
+        unsafe public static string ToStringRyu(this double d,int Precision)
         {
             Span<char> charSpan = stackalloc char[40];
-            int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d,(uint)n, charSpan);
+            int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d,(uint)Precision, charSpan);
             fixed (char* data = &charSpan.GetPinnableReference())
             {
                 return new string(data, 0, index);
@@ -67,15 +68,15 @@ namespace RyuDotNet
             return buffer.Slice(0, index);
         }
 
-        public static Span<byte> WriteTo(this double d, int n,  Span<byte> buffer)
+        public static Span<byte> WriteTo(this double d, int Precision,  Span<byte> buffer)
         {
-            int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d,(uint)n, buffer);
+            int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d,(uint)Precision, buffer);
             return buffer.Slice(0, index);
         }
 
-        public static Span<char> WriteTo(this double d, int n, Span<char> buffer)
+        public static Span<char> WriteTo(this double d, int Precision, Span<char> buffer)
         {
-            int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d, (uint)n,buffer);
+            int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d, (uint)Precision, buffer);
             return buffer.Slice(0, index);
         }
     }

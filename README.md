@@ -1,4 +1,5 @@
 # Ryu.NET
+![.NET Core](https://github.com/Ninds/Ryu.NET/workflows/Build%20and%20Test/badge.svg)
 
 [Ryu](https://github.com/ulfjack/ryu) is a high-performance algorithm for converting floats to strings.
 

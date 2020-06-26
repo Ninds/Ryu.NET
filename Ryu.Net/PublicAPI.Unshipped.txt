@@ -3,11 +3,11 @@ static RyuDotNet.Ryu.Parse(System.ReadOnlySpan<byte> span) -> double
 static RyuDotNet.Ryu.Parse(System.ReadOnlySpan<char> span) -> double
 static RyuDotNet.Ryu.Parse(string str) -> double
 static RyuDotNet.Ryu.ToStringRyu(this double d) -> string
-static RyuDotNet.Ryu.ToStringRyu(this double d, int n) -> string
+static RyuDotNet.Ryu.ToStringRyu(this double d, int Precision) -> string
 static RyuDotNet.Ryu.TryParse(System.ReadOnlySpan<byte> span, out double res) -> bool
 static RyuDotNet.Ryu.TryParse(System.ReadOnlySpan<char> span, out double res) -> bool
 static RyuDotNet.Ryu.TryParse(string str, out double res) -> bool
 static RyuDotNet.Ryu.WriteTo(this double d, System.Span<byte> buffer) -> System.Span<byte>
 static RyuDotNet.Ryu.WriteTo(this double d, System.Span<char> buffer) -> System.Span<char>
-static RyuDotNet.Ryu.WriteTo(this double d, int n, System.Span<byte> buffer) -> System.Span<byte>
-static RyuDotNet.Ryu.WriteTo(this double d, int n, System.Span<char> buffer) -> System.Span<char>
+static RyuDotNet.Ryu.WriteTo(this double d, int Precision, System.Span<byte> buffer) -> System.Span<byte>
+static RyuDotNet.Ryu.WriteTo(this double d, int Precision, System.Span<char> buffer) -> System.Span<char>
