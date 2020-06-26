@@ -1,10 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project InitialTargets="SetVersion" Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
- 
+    <Version>0.0.0-dev$([System.DateTime]::Now.ToString(yyMMddhhmm))</Version>
+    <Title>Ryu.NET</Title>
+    <Description>
+  <![CDATA[ Ryu.NET is a .NET port of Ryu (https://github.com/ulfjack/ryu) implementing  Ryū (https://dl.acm.org/doi/10.1145/3192366.3192369), the  fast algorithm for converting between strings and floats. ]]>
+    </Description>
+    <RepositoryUrl>https://github.com/Ninds/Ryu.NET</RepositoryUrl>
+    <RepositoryCommit>$(GITHUB_SHA)</RepositoryCommit>
+    <RepositoryBranch>$(GITHUB_REF)</RepositoryBranch>
+    <PackageLicenseExpression>BSL-1.0 OR Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +37,18 @@
     <AdditionalFiles Include="PublicAPI.Unshipped.txt" />
   </ItemGroup>
 
+  <PropertyGroup Condition=" '$(GITHUB_REF)' == 'refs/heads/release' and '$(CI)' == 'true' ">
+    <Version>$([System.DateTime]::Now.ToString(yy.MM.dd))</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(GITHUB_REF)' == 'refs/heads/prerelease' and '$(CI)' == 'true'  ">
+    <Version>$([System.DateTime]::Now.ToString(yy.MM.dd))-dev</Version>
+  </PropertyGroup>
+
+
+  <Target Name="SetVersion">
+    <Message Text="::set-output name=version::$(Version)" Importance="high" />
+  </Target>
 
 
 </Project>
