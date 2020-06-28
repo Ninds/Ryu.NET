@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Xunit;
 
 namespace RyuDotNet.UnitTests
@@ -37,18 +38,45 @@ namespace RyuDotNet.UnitTests
         }
 
 
+        [Fact]
+        public void TestUTF16()
+        {
+            double x = Math.PI;
+            double ryuVale;
+
+            for (int i = 0; i < 50; ++i)
+            {
+                var str = new StringBuilder(x.ToString());
+                var eq1 = RyuDotNet.Internal.Ryu.s2d_n(str.ToString(), out ryuVale);
+                Assert.Equal(Status.SUCCESS, eq1);
+
+                for(int j = 0; j < str.Length; ++j)
+                {
+                    var str2 = new StringBuilder(str.ToString());
+                    var r = str2[j] | (1 << (8+ (j%8)));
+                    str2[j] = (char)r;
+                    var eq2 = RyuDotNet.Internal.Ryu.s2d_n(str2.ToString(), out ryuVale);
+                    Assert.Equal(Status.MALFORMED_INPUT, eq2);
+                }
+                x *= -Math.PI;
+            }
+
+        }
+
+
+
+
+
+
     }
 
     public class SmallDataGenerator : IEnumerable<object[]>
-    {
-        IEnumerable<IFPTestData> _allFPTestDatas;
-       
+    { 
         public IEnumerator<object[]> GetEnumerator()
         {
-            foreach(var str in SmallTestSet.TestArray)
+            foreach (var str in SmallTestSet.TestArray)
             {
-                
-                    yield return new object[] { str };
+                yield return new object[] { str };
             }
         }
 
@@ -58,8 +86,6 @@ namespace RyuDotNet.UnitTests
 
     public class SmallAsciiDataGenerator : IEnumerable<object[]>
     {
-        IEnumerable<IFPTestData> _allFPTestDatas;
-
         public IEnumerator<object[]> GetEnumerator()
         {
             var PairsEnumberable  =  SmallTestSet.TestAsciiArray.Zip(SmallTestSet.TestArray);

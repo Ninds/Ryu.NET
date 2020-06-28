@@ -1,7 +1,6 @@
 ﻿
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using static RyuDotNet.Internal.Status;
 using int32_t = System.Int32;
 using uint32_t = System.UInt32;
@@ -217,9 +216,21 @@ namespace RyuDotNet.Internal
 
         internal static Status s2d_n(ReadOnlySpan<char> buffer, out double result)
         {
+            result = 0;
             Span<byte> byteBuffer = stackalloc byte[buffer.Length];
-            for (int i = 0; i < buffer.Length; ++i) byteBuffer[i] = (byte)buffer[i];
 
+            fixed (byte* bytptr = &byteBuffer.GetPinnableReference())
+            fixed (char* charptr = &buffer.GetPinnableReference())
+            {
+                byte* srcptr = (byte*)charptr;
+                byte* destptr = bytptr;
+                for (int i = 0; i < buffer.Length; ++i)
+                {
+                    *destptr++ = *srcptr++;
+                    if (*srcptr++ !=0 ) return MALFORMED_INPUT;
+                    
+                }
+            }
             return s2d_n(byteBuffer, out result);
         }
 
