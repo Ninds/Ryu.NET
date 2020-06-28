@@ -4,6 +4,10 @@ using System.Runtime.CompilerServices;
 
 namespace RyuDotNet
 {
+    /// <summary>
+    /// C# port of Ryu https://github.com/ulfjack/ryu 
+    /// A fast algorithm for converting between strings and doubles
+    /// </summary>
     public static class Ryu
     {
         /// <summary>
@@ -11,7 +15,7 @@ namespace RyuDotNet
         /// the Ryu algorithm.
         /// A return value indicates whether the conversion succeeded or failed.
         /// </summary>
-        /// <param name="span">A chacater span  that contains the string representation of the number to convert.</param>
+        /// <param name="s">A chacater span  that contains the string representation of the number to convert.</param>
         /// <param name="result">When this method returns, contains the double-precision floating-point number equivalent of the numeric value 
         /// or symbol contained in span parameter,  if the conversion succeeded, or zero if the conversion failed. </param>
         /// <returns>true if s was converted successfully; otherwise, false.</returns>
@@ -35,7 +39,7 @@ namespace RyuDotNet
         /// the Ryu algorithm.
         /// A return value indicates whether the conversion succeeded or failed.
         /// </summary>
-        /// <param name="span">An byte span of the ascii string that contains the string representation of the number to convert.</param>
+        /// <param name="s">An byte span of the ascii string that contains the string representation of the number to convert.</param>
         /// <param name="result">When this method returns, contains the double-precision floating-point number equivalent of the numeric value 
         /// or symbol contained in span parameter,  if the conversion succeeded, or zero if the conversion failed. </param>
         /// <returns>true if s was converted successfully; otherwise, false.</returns>
