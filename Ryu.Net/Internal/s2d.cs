@@ -203,12 +203,15 @@ namespace RyuDotNet.Internal
 
 
             uint64_t ieee_m2 = (m2 >> shift) + (roundUp ? 1U : 0);
-            if (ieee_m2 == (1ul << (DOUBLE_MANTISSA_BITS + 1)))
+            assert(ieee_m2 <= (1ul << (DOUBLE_MANTISSA_BITS + 1)));
+            ieee_m2 &= (1ul << DOUBLE_MANTISSA_BITS) -1;
+            if (ieee_m2 == 0 && roundUp)
             {
+                
                 // Due to how the IEEE represents +/-Infinity, we don't need to check for overflow here.
                 ieee_e2++;
             }
-            ieee_m2 &= (1ul << DOUBLE_MANTISSA_BITS) - 1;
+
             uint64_t ieee2 = (((((uint64_t)(signedM ? 1 : 0)) << DOUBLE_EXPONENT_BITS) | (uint64_t)ieee_e2) << DOUBLE_MANTISSA_BITS) | ieee_m2;
             result = int64Bits2Double(ieee2);
             return SUCCESS;

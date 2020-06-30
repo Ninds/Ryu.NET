@@ -63,12 +63,25 @@ namespace RyuDotNet.UnitTests
 
         }
 
+        // https://github.com/ulfjack/ryu/issues/173
+        [Fact]
+        public void TestDenormalBoundaryInParse()
+        {
+            double result = 0;
+            var testCase = "2.2250738585072013e-308";
+            double refValue = 2.2250738585072013e-308;
+
+            var st = RyuDotNet.Internal.Ryu.s2d_n(testCase, out result);
+
+            Assert.Equal(Status.SUCCESS, st);
+            Assert.Equal(refValue, result);
+
+        }
 
 
 
 
-
-    }
+        }
 
     public class SmallDataGenerator : IEnumerable<object[]>
     { 
