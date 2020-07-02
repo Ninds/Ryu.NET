@@ -5,7 +5,7 @@
 |![master](https://github.com/Ninds/Ryu.NET/workflows/Build%20and%20Test/badge.svg) |![prerelease](https://github.com/Ninds/Ryu.NET/workflows/Build%20and%20Test/badge.svg?branch=prerelease) |![release](https://github.com/Ninds/Ryu.NET/workflows/Build%20and%20Test/badge.svg?branch=release)|
 
 
-
+### [nuget package](https://www.nuget.org/packages/Ryu.NET)
 
 [Ryu](https://github.com/ulfjack/ryu) is a high-performance algorithm for converting floats to strings.
 
