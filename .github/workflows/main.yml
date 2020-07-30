@@ -58,7 +58,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "package_output/*.nupkg"
-          prerelease: ${{ github.ref ==  'refs/heads/prerelease'}}
+          prerelease: ${{ github.ref ==  'refs/heads/TESTNUGET'}}
           draft: false
           tag: "TEST_TAG"
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -66,7 +66,7 @@ jobs:
         uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
         with:
           nupkg-path:  "package_output/*.nupkg"
-          repo-owner:  'Narinder Claire'
+          repo-owner:  'Ninds'
           gh-user:  'Ninds'
           token:  ${{ secrets.GITHUB_TOKEN }}
     
