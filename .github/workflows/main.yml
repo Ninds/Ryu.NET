@@ -60,7 +60,7 @@ jobs:
           artifacts: "package_output/*.nupkg"
           prerelease: ${{ github.ref ==  'refs/heads/TESTNUGET'}}
           draft: false
-          tag: "TEST_TAG"
+          tag: "TEST_TAG_TEST"
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Github Package
         uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
