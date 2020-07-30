@@ -2,9 +2,9 @@ name: Test Push
 
 on:
   push:
-    branches: [ master, release, prerelease]
+    branches: [ TESTNUGET]
   pull_request:
-    branches: [ master ]
+    branches: [TESTNUGET ]
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-latest]
     steps:
           - uses: actions/checkout@v2
           - name: Setup .NET Core 3.1
