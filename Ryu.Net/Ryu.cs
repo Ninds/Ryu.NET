@@ -113,11 +113,23 @@ namespace RyuDotNet
         /// <returns>The string representation of the double value</returns>
         unsafe public static string ToStringRyu(this double d,int Precision)
         {
-            Span<char> charSpan = stackalloc char[40];
-            int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d,(uint)Precision, charSpan);
-            fixed (char* data = &charSpan.GetPinnableReference())
+            ValidatePrecision(Precision);
+            int bufferLength = Precision + 9;
+            if (Precision <= 128)
             {
-                return new string(data, 0, index);
+                Span<char> charSpan = stackalloc char[bufferLength];
+                int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d, (uint)Precision, charSpan);
+                fixed (char* data = &charSpan.GetPinnableReference())
+                {
+                    return new string(data, 0, index);
+                }
+            }
+
+            var charBuffer = new char[bufferLength];
+            int charIndex = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d, (uint)Precision, charBuffer);
+            fixed (char* data = charBuffer)
+            {
+                return new string(data, 0, charIndex);
             }
         }
 
@@ -158,7 +170,12 @@ namespace RyuDotNet
         /// <returns>The ascii (byte) span containing the string representation of the double value which will be a slice of buffer</returns>
         public static Span<byte> WriteTo(this double d, int Precision,  Span<byte> buffer)
         {
-            int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d,(uint)Precision, buffer);
+            int requiredLength = GetExponentialBufferLength(d, Precision);
+            if (buffer.Length < requiredLength)
+            {
+                throw new ArgumentException("The destination buffer is too small.", nameof(buffer));
+            }
+            int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d, (uint)Precision, buffer);
             return buffer.Slice(0, index);
         }
 
@@ -173,8 +190,35 @@ namespace RyuDotNet
         /// <returns>The characters containing the string representation of the double value which will be a slice of buffer</returns>
         public static Span<char> WriteTo(this double d, int Precision, Span<char> buffer)
         {
+            int requiredLength = GetExponentialBufferLength(d, Precision);
+            if (buffer.Length < requiredLength)
+            {
+                throw new ArgumentException("The destination buffer is too small.", nameof(buffer));
+            }
             int index = RyuDotNet.Internal.Ryu.d2exp_buffered_n(d, (uint)Precision, buffer);
             return buffer.Slice(0, index);
+        }
+
+        static void ValidatePrecision(int precision)
+        {
+            if (precision < 0 || precision > int.MaxValue - 9)
+            {
+                throw new ArgumentOutOfRangeException(nameof(precision));
+            }
+        }
+
+        static int GetExponentialBufferLength(double value, int precision)
+        {
+            ValidatePrecision(precision);
+            if (double.IsNaN(value))
+            {
+                return 3;
+            }
+            if (double.IsInfinity(value))
+            {
+                return value < 0 ? 9 : 8;
+            }
+            return precision == 0 ? 7 : precision + 8;
         }
     }
 }

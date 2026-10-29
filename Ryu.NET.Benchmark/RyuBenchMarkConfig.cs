@@ -10,7 +10,7 @@ namespace RyuDotNet.Benchmark
         {
             AddJob(Job.Default.
                         WithPlatform(Platform.X64).
-                        WithRuntime(CoreRuntime.Core31).
+                        WithRuntime(CoreRuntime.Core10_0).
                         WithJit(Jit.RyuJit).
                         WithIterationCount(1000).
                         WithLaunchCount(1).
@@ -19,7 +19,7 @@ namespace RyuDotNet.Benchmark
                   ).
             AddJob(Job.Default.
                       WithPlatform(Platform.X64).
-                      WithRuntime(CoreRuntime.Core50).
+                      WithRuntime(CoreRuntime.Core11_0).
                       WithJit(Jit.RyuJit).
                       WithIterationCount(1000).
                       WithLaunchCount(1).

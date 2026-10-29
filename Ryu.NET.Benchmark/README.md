@@ -1,5 +1,7 @@
 ﻿
-Initial (crude) Benchmark of Ryu vs C# for parsing a C# string to double.
+Historical benchmark results from .NET Core 3.1 using BenchmarkDotNet 0.12.1.
+These results predate the current .NET 10 and .NET 11 benchmark targets and should
+not be used to compare current runtime performance.
 
 
 ``` ini

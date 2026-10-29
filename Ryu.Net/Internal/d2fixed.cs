@@ -204,7 +204,7 @@ namespace RyuDotNet.Internal
 
             if (mantissa != 0)
             {
-                memcpy(result, "nan");
+                memcpy(result, "NaN");
                 return 3;
             }
             if (sign)

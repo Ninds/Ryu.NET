@@ -271,6 +271,8 @@ The characters containing the string representation of the double value which wi
 <a name='M-RyuDotNet-Ryu-BENHMARK-'></a>
 # Benchmarks
 
+The figures below are historical results from .NET Core 3.1 and .NET 5.0; they
+predate the current .NET 10 and .NET 11 benchmark targets and are not current comparisons.
 
 ### Parse a C# (UTF16) string to double 
 

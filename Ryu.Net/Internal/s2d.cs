@@ -22,7 +22,37 @@ namespace RyuDotNet.Internal
         static double int64Bits2Double(uint64_t bits)
         {
             return *(double*)&bits;
-        
+        }
+
+        static bool is_infinity(ReadOnlySpan<byte> buffer, int offset)
+        {
+            return buffer.Length == offset + 8 &&
+                buffer[offset] == 'I' &&
+                buffer[offset + 1] == 'n' &&
+                buffer[offset + 2] == 'f' &&
+                buffer[offset + 3] == 'i' &&
+                buffer[offset + 4] == 'n' &&
+                buffer[offset + 5] == 'i' &&
+                buffer[offset + 6] == 't' &&
+                buffer[offset + 7] == 'y';
+        }
+
+        static int32_t adjust_exponent(long exponent, bool signedExponent, int dotIndex, int exponentIndex)
+        {
+            if (signedExponent)
+            {
+                exponent = -exponent;
+            }
+            exponent -= dotIndex < exponentIndex ? exponentIndex - dotIndex - 1 : 0;
+            if (exponent > 1000)
+            {
+                return 1000;
+            }
+            if (exponent < -1000)
+            {
+                return -1000;
+            }
+            return (int32_t)exponent;
         }
 
         internal static Status s2d_n(ReadOnlySpan<byte> buffer, out double result)
@@ -33,20 +63,43 @@ namespace RyuDotNet.Internal
             {
                 return INPUT_TOO_SHORT;
             }
+
+            if (buffer.Length == 3 && buffer[0] == 'N' && buffer[1] == 'a' && buffer[2] == 'N')
+            {
+                result = double.NaN;
+                return SUCCESS;
+            }
+            if (is_infinity(buffer, 0))
+            {
+                result = double.PositiveInfinity;
+                return SUCCESS;
+            }
+            if (buffer.Length == 9 && buffer[0] == '-' && is_infinity(buffer, 1))
+            {
+                result = double.NegativeInfinity;
+                return SUCCESS;
+            }
+            if (buffer.Length == 9 && buffer[0] == '+' && is_infinity(buffer, 1))
+            {
+                result = double.PositiveInfinity;
+                return SUCCESS;
+            }
+
             int m10digits = 0;
-            int e10digits = 0;
             int dotIndex = len;
             int eIndex = len;
             uint64_t m10 = 0;
-            int32_t e10 = 0;
+            long e10 = 0;
+            long maxExponent = (long)len + 1000;
             bool signedM = false;
             bool signedE = false;
             int i = 0;
-            if (buffer[i] == '-')
+            if (buffer[i] == '-' || buffer[i] == '+')
             {
-                signedM = true;
+                signedM = buffer[i] == '-';
                 i++;
             }
+            bool hasMantissaDigit = false;
             for (; i < len; i++)
             {
                 byte c = buffer[i];
@@ -63,6 +116,7 @@ namespace RyuDotNet.Internal
                 {
                     break;
                 }
+                hasMantissaDigit = true;
                 if (m10digits >= 17)
                 {
                     return INPUT_TOO_LONG;
@@ -73,6 +127,11 @@ namespace RyuDotNet.Internal
                     m10digits++;
                 }
             }
+            if (!hasMantissaDigit)
+            {
+                return MALFORMED_INPUT;
+            }
+            bool hasExponentDigit = false;
             if (i < len && ((buffer[i] == 'e') || (buffer[i] == 'E')))
             {
                 eIndex = i;
@@ -89,34 +148,34 @@ namespace RyuDotNet.Internal
                     {
                         return MALFORMED_INPUT;
                     }
-                    if (e10digits > 3)
-                    {
-                        // TODO: Be more lenient. Return +/-Infinity or +/-0 instead.
-                        return INPUT_TOO_LONG;
-                    }
-                    e10 = 10 * e10 + (c - '0');
-                    if (e10 != 0)
-                    {
-                        e10digits++;
-                    }
+                    hasExponentDigit = true;
+                    int digit = c - '0';
+                    e10 = e10 > (maxExponent - digit) / 10
+                        ? maxExponent
+                        : 10 * e10 + digit;
+                }
+                if (!hasExponentDigit)
+                {
+                    return MALFORMED_INPUT;
                 }
             }
             if (i < len)
             {
                 return MALFORMED_INPUT;
             }
-            if (signedE)
-            {
-                e10 = -e10;
-            }
-            e10 -= dotIndex < eIndex ? eIndex - dotIndex - 1 : 0;
+            int32_t adjustedExponent = adjust_exponent(e10, signedE, dotIndex, eIndex);
             if (m10 == 0)
             {
                 result = signedM ? -0.0 : 0.0;
                 return SUCCESS;
             }
 
+            return s2d_convert(m10, m10digits, adjustedExponent, signedM, out result);
+        }
 
+        static Status s2d_convert(uint64_t m10, int m10digits, int32_t e10, bool signedM, out double result)
+        {
+            result = 0;
             if ((m10digits + e10 <= -324) || (m10 == 0))
             {
                 // Number is less than 1e-324, which should be rounded down to 0; return +/-0.0.
@@ -207,7 +266,7 @@ namespace RyuDotNet.Internal
             ieee_m2 &= (1ul << DOUBLE_MANTISSA_BITS) -1;
             if (ieee_m2 == 0 && roundUp)
             {
-                
+
                 // Due to how the IEEE represents +/-Infinity, we don't need to check for overflow here.
                 ieee_e2++;
             }
@@ -220,23 +279,121 @@ namespace RyuDotNet.Internal
         internal static Status s2d_n(ReadOnlySpan<char> buffer, out double result)
         {
             result = 0;
-            Span<byte> byteBuffer = stackalloc byte[buffer.Length];
-
-            fixed (byte* bytptr = &byteBuffer.GetPinnableReference())
-            fixed (char* charptr = &buffer.GetPinnableReference())
+            var len = buffer.Length;
+            if (len == 0)
             {
-                byte* srcptr = (byte*)charptr;
-                byte* destptr = bytptr;
-                for (int i = 0; i < buffer.Length; ++i)
+                return INPUT_TOO_SHORT;
+            }
+
+            if (buffer.SequenceEqual("NaN".AsSpan()))
+            {
+                result = double.NaN;
+                return SUCCESS;
+            }
+            if (buffer.SequenceEqual("Infinity".AsSpan()))
+            {
+                result = double.PositiveInfinity;
+                return SUCCESS;
+            }
+            if (buffer.SequenceEqual("-Infinity".AsSpan()))
+            {
+                result = double.NegativeInfinity;
+                return SUCCESS;
+            }
+            if (buffer.SequenceEqual("+Infinity".AsSpan()))
+            {
+                result = double.PositiveInfinity;
+                return SUCCESS;
+            }
+
+            int m10digits = 0;
+            int dotIndex = len;
+            int eIndex = len;
+            uint64_t m10 = 0;
+            long e10 = 0;
+            long maxExponent = (long)len + 1000;
+            bool signedM = false;
+            bool signedE = false;
+            int i = 0;
+            if (buffer[i] == '-' || buffer[i] == '+')
+            {
+                signedM = buffer[i] == '-';
+                i++;
+            }
+            bool hasMantissaDigit = false;
+            for (; i < len; i++)
+            {
+                char c = buffer[i];
+                if (c == '.')
                 {
-                    *destptr++ = *srcptr++;
-                    if (*srcptr++ !=0 ) return MALFORMED_INPUT;
-                    
+                    if (dotIndex != len)
+                    {
+                        return MALFORMED_INPUT;
+                    }
+                    dotIndex = i;
+                    continue;
+                }
+                if (c < '0' || c > '9')
+                {
+                    break;
+                }
+                hasMantissaDigit = true;
+                if (m10digits >= 17)
+                {
+                    return INPUT_TOO_LONG;
+                }
+                m10 = (10 * m10) + (uint64_t)(c - '0');
+                if (m10 != 0)
+                {
+                    m10digits++;
                 }
             }
-            return s2d_n(byteBuffer, out result);
+            if (!hasMantissaDigit)
+            {
+                return MALFORMED_INPUT;
+            }
+
+            bool hasExponentDigit = false;
+            if (i < len && (buffer[i] == 'e' || buffer[i] == 'E'))
+            {
+                eIndex = i;
+                i++;
+                if (i < len && (buffer[i] == '-' || buffer[i] == '+'))
+                {
+                    signedE = buffer[i] == '-';
+                    i++;
+                }
+                for (; i < len; i++)
+                {
+                    char c = buffer[i];
+                    if (c < '0' || c > '9')
+                    {
+                        return MALFORMED_INPUT;
+                    }
+                    hasExponentDigit = true;
+                    int digit = c - '0';
+                    e10 = e10 > (maxExponent - digit) / 10
+                        ? maxExponent
+                        : 10 * e10 + digit;
+                }
+                if (!hasExponentDigit)
+                {
+                    return MALFORMED_INPUT;
+                }
+            }
+            if (i < len)
+            {
+                return MALFORMED_INPUT;
+            }
+            int32_t adjustedExponent = adjust_exponent(e10, signedE, dotIndex, eIndex);
+            if (m10 == 0)
+            {
+                result = signedM ? -0.0 : 0.0;
+                return SUCCESS;
+            }
+
+            return s2d_convert(m10, m10digits, adjustedExponent, signedM, out result);
         }
 
-      
     }
 }

@@ -10,19 +10,37 @@ namespace RyuDotNet.Benchmark
     {
         static CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
         byte[][] TestArray;
+        string[] StringArray;
 
         [GlobalSetup]
         public void GlobalSetup()
-         => TestArray = SmallTestSet.TestAsciiArray;
+        {
+            TestArray = SmallTestSet.TestAsciiArray;
+            StringArray = new string[TestArray.Length];
+            for (int i = 0; i < TestArray.Length; ++i)
+            {
+                StringArray[i] = Encoding.ASCII.GetString(TestArray[i]);
+            }
+        }
 
         [Benchmark(Baseline = true)]
-        public void CSDoubleParseAscii()
+        public void CSDoubleParseString()
+        {
+            for (int i = 0; i < StringArray.Length; ++i)
+            {
+                double x;
+                for (int u = 0; u < 5; ++u) x = double.Parse(StringArray[i], culture);
+
+            }
+        }
+
+        [Benchmark]
+        public void CSDoubleParseAsciiEndToEnd()
         {
             for (int i = 0; i < TestArray.Length; ++i)
             {
                 double x;
                 for (int u = 0; u < 5; ++u) x = double.Parse(Encoding.ASCII.GetString(TestArray[i]), culture);
-
             }
         }
 
