@@ -233,6 +233,20 @@ namespace RyuDotNet.UnitTests
             Assert.Throws<ArgumentException>(() => 1.25.WriteTo(10, new char[17]));
         }
 
+        [Theory]
+        [InlineData(1UL, 0U)]
+        [InlineData(5UL, 1U)]
+        [InlineData(20UL, 1U)]
+        [InlineData(625UL, 4U)]
+        [InlineData(42UL * 3125UL, 5U)]
+        [InlineData(7450580596923828125UL, 27U)]
+        [InlineData(ulong.MaxValue, 1U)]
+        [InlineData(ulong.MaxValue - 1UL, 0U)]
+        public void Pow5FactorMatchesDivisibility(ulong value, uint expected)
+        {
+            Assert.Equal(expected, RyuDotNet.Internal.Ryu.pow5Factor(value));
+        }
+
         static void AssertEquivalent(double expected, double actual)
         {
             if (double.IsNaN(expected))

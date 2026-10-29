@@ -293,11 +293,10 @@ namespace RyuDotNet.Internal
                 //memcpy(result.Slice((int)(index + olength - i - 5)), DIGIT_TABLE.Slice((int)d0, 2));
                 //memcpy(result.Slice((int)(index + olength - i - 7)), DIGIT_TABLE.Slice((int)d1, 2));
 
-                long oiIndex = index + olength - i;
-                Copy2BytesFromDigitTable(result, oiIndex - 1, c0);
-                Copy2BytesFromDigitTable(result, oiIndex - 3, c1);
-                Copy2BytesFromDigitTable(result, oiIndex - 5, d0);
-                Copy2BytesFromDigitTable(result, oiIndex - 7, d1);
+                Copy2BytesFromDigitTable(result, index + olength - 1, c0);
+                Copy2BytesFromDigitTable(result, index + olength - 3, c1);
+                Copy2BytesFromDigitTable(result, index + olength - 5, d0);
+                Copy2BytesFromDigitTable(result, index + olength - 7, d1);
 
                 i += 8;
             }

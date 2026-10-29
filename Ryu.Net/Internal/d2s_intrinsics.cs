@@ -75,19 +75,19 @@ namespace RyuDotNet.Internal
             return (uint32_t)(x - 1000000000 * div1e9(x));
         }
 
-        static uint32_t pow5Factor(uint64_t value)
+        internal static uint32_t pow5Factor(uint64_t value)
         {
+            const uint64_t inverseOf5 = 14757395258967641293UL;
+            const uint64_t overflowThreshold = 3689348814741910323UL;
             uint32_t count = 0;
             for (; ; )
             {
                 assert(value != 0);
-                uint64_t q = div5(value);
-                uint32_t r = ((uint32_t)value) - 5 * ((uint32_t)q);
-                if (r != 0)
+                value = unchecked(value * inverseOf5);
+                if (value > overflowThreshold)
                 {
                     break;
                 }
-                value = q;
                 ++count;
             }
             return count;
